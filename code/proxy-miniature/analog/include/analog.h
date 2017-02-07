@@ -1,6 +1,5 @@
 /**
- * proxy-fh16 - Interface to the Badger active dolly platform.
- * Copyright (C) 2016 Revere
+ * Copyright (C) 2016 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,8 +21,9 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 
-#include <opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
 
 namespace opendlv {
 namespace proxy {
@@ -32,19 +32,22 @@ namespace miniature {
 /**
  * Interface to Badger active dolly platform.
  */
-class Analog : public odcore::base::module::DataTriggeredConferenceClientModule {
+class Analog : public odcore::base::module::TimeTriggeredConferenceClientModule {
    public:
     Analog(int32_t const &, char **);
     Analog(Analog const &) = delete;
     Analog &operator=(Analog const &) = delete;
     virtual ~Analog();
 
-    virtual void nextContainer(odcore::data::Container &);
-
    private:
     virtual void setUp();
     virtual void tearDown();
     virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
+
+    std::vector<std::pair<uint16_t,float>> getReadings();
+    float m_conversionConst;
+    bool m_debug;
+    std::vector<uint16_t> m_pins;
 };
 
 } 

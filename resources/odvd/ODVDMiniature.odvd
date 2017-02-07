@@ -16,4 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-/* No messages */
+message opendlv.proxy.AnalogReading [id = 173] {
+  uint16 pin [id = 1];
+  float val [id = 2];
+}

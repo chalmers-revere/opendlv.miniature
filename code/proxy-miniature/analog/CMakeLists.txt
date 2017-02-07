@@ -59,6 +59,10 @@ set(CMAKE_MODULE_PATH "${ODVDOPENDLVDATA_DIR}/share/cmake-${CMAKE_MAJOR_VERSION}
 find_package(ODVDOpenDLVData REQUIRED)
 
 ###########################################################################
+# Find ODVDMiniature.
+find_package(ODVDMiniature REQUIRED)
+
+###########################################################################
 # Find AutomotiveData.
 set(AUTOMOTIVEDATA_DIR "${OPENDAVINCI_DIR}")
 find_package(AutomotiveData REQUIRED)
@@ -89,6 +93,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
               ${ODVDMINIATURE_LIBRARIES}
               ${ODVDVEHICLE_LIBRARIES}
               ${ODVDOPENDLVDATA_LIBRARIES}
+              ${ODVDMINIATURE_LIBRARIES}
               ${AUTOMOTIVEDATA_LIBRARIES}
               ${ODCANTOOLS_LIBRARIES})
 
