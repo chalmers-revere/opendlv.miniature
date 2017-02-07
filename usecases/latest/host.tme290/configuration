@@ -70,5 +70,5 @@ odsupercomponent.pulsetimeack.exclude = odcockpit
 
 proxy-miniature-analog.conversion-constant = 1
 proxy-miniature-analog.debug = 1
-proxy-miniature-analog.pins = 0,1,2,3,4,5,6
+proxy-miniature-analog.pins = 0,1,2,3,4,5,6,7
 

@@ -49,11 +49,6 @@ set(CMAKE_MODULE_PATH "${ODVDVEHICLE_DIR}/share/cmake-${CMAKE_MAJOR_VERSION}.${C
 find_package(ODVDVehicle REQUIRED)
 
 ###########################################################################
-# Find ODVDFH16Truck.
-set(CMAKE_MODULE_PATH "${ODVDVEHICLE_DIR}/share/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules" ${CMAKE_MODULE_PATH})
-find_package(ODVDFH16Truck REQUIRED)
-
-###########################################################################
 # Find ODVDOpenDLVData.
 set(CMAKE_MODULE_PATH "${ODVDOPENDLVDATA_DIR}/share/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules" ${CMAKE_MODULE_PATH})
 find_package(ODVDOpenDLVData REQUIRED)
