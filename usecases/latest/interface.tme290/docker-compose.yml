@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+    proxy-miniature-analog-0:
+        build: .
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-analog --cid=${CID} --freq=100 --id=1"
+    
+    proxy-miniature-analog-1:
+        build: .
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-analog --cid=${CID} --freq=100 --id=2"
+    
+    proxy-miniature-digital-0:
+        build: .
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-digital --cid=${CID} --freq=100 --id=1"
+
+    proxy-miniature-digital-1:
+        build: .
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-digital --cid=${CID} --freq=100 --id=2"
+
+    proxy-miniature-pwm-0:
+        build: .
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-pwm --cid=${CID} --freq=100 --id=1"
