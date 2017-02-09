@@ -16,12 +16,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include <cmath>
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <vector>
 
+#include <opendavinci/odcore/base/KeyValueConfiguration.h>
 #include <opendavinci/odcore/data/Container.h>
 
+#include <odvdminiature/GeneratedHeaders_ODVDMiniature.h>
 #include <odvdopendlvdata/GeneratedHeaders_ODVDOpenDLVData.h>
+#include <opendavinci/odcore/strings/StringToolbox.h>
 
 #include "analog.h"
 
@@ -30,7 +36,10 @@ namespace proxy {
 namespace miniature {
 
 Analog::Analog(const int &argc, char **argv)
-    : DataTriggeredConferenceClientModule(argc, argv, "proxy-miniature-analog")
+    : TimeTriggeredConferenceClientModule(argc, argv, "proxy-miniature-analog")
+    , m_conversionConst()
+    , m_debug()
+    , m_pins()
 {
 }
 
@@ -40,23 +49,61 @@ Analog::~Analog()
 
 void Analog::setUp() 
 {
+  odcore::base::KeyValueConfiguration kv = getKeyValueConfiguration();
+
+  m_conversionConst = kv.getValue<float>("proxy-miniature-analog.conversion-constant");
+  m_debug = (kv.getValue<int32_t>("proxy-miniature-analog.debug") == 1);
+  std::string pinsString = kv.getValue<std::string>("proxy-miniature-analog.pins");
+  std::vector<std::string> pinsVecString = odcore::strings::StringToolbox::split(pinsString, ',');
+  for(std::string const& str : pinsVecString) {
+    m_pins.push_back(std::stoi(str));
+  }
 }
 
 void Analog::tearDown() 
 {
 }
 
-void Analog::nextContainer(odcore::data::Container &a_container)
-{
-  (void) a_container;
-}
 
 odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Analog::body()
 {
   while (getModuleStateAndWaitForRemainingTimeInTimeslice() == odcore::data::dmcp::ModuleStateMessage::RUNNING) {
-  }
+    std::vector<std::pair<uint16_t, float>> reading = getReadings();
+    for (std::pair<uint16_t, float> const& pair : reading) {
+      // std::cout << "Pin " << pair.first << ": " << pair.second << " ";
+      opendlv::proxy::AnalogReading message(pair.first, pair.second);
+      odcore::data::Container c(message);
+      getConference().send(c);
+    }
 
+    if(m_debug) {
+      std::cout << "[Proxy-miniature-analog] ";
+      for (std::pair<uint16_t, float> const& pair : reading) {
+        std::cout << "Pin " << pair.first << ": " << pair.second << " ";
+      }
+      std::cout << std::endl;
+    }
+  }
   return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;
+}
+
+std::vector<std::pair<uint16_t, float>> Analog::getReadings() {
+  std::vector<std::pair<uint16_t, float>> reading;
+  for(uint16_t const pin : m_pins) {
+    std::string filename = "/sys/bus/iio/devices/iio:device0/in_voltage" + std::to_string(pin) + "_raw";
+    std::ifstream file(filename, std::ifstream::in);
+    std::string line;
+    if(file.is_open()){
+      std::getline(file, line);
+      uint16_t rawReading = std::stoi(line);
+      reading.push_back(std::make_pair(pin, rawReading*m_conversionConst));
+    } else {
+      std::cerr << "[Proxy-miniature-analog] Could not read from analog input. (pin: " << pin << ", filename: " << filename << ")" << std::endl;
+      reading.push_back(std::make_pair(pin,std::nanf("")));
+    }
+    file.close();
+  }
+  return reading;
 }
 
 }
