@@ -43,8 +43,7 @@ class Analog : public odcore::base::module::TimeTriggeredConferenceClientModule 
     virtual void setUp();
     virtual void tearDown();
     virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-
-    std::vector<std::pair<uint16_t,float>> getReadings();
+    std::vector<std::pair<uint16_t, float>> getReadings();
     float m_conversionConst;
     bool m_debug;
     std::vector<uint16_t> m_pins;
