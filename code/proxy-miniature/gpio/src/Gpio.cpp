@@ -76,7 +76,7 @@ void Gpio::setUp()
 
   if (pinsVector.size() == initialValuesVector.size() 
       && pinsVector.size() == initialDirectionsVector.size()) {
-    for (uint32_t i = 0; i < pinsString.size(); i++) {
+    for (uint32_t i = 0; i < pinsVector.size(); i++) {
       uint16_t pin = std::stoi(pinsVector.at(i));
       bool value = static_cast<bool>(std::stoi(initialValuesVector.at(i)));
       std::string direction = initialDirectionsVector.at(i);
