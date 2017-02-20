@@ -88,7 +88,7 @@ void Gpio::setUp()
       }
     }
   } else {
-    cerr << << "[" << getName() << "] " << "Number of pins do not equals to number of values or directions" << std::endl;
+    cerr << "[" << getName() << "] " << "Number of pins do not equals to number of values or directions" << std::endl;
   }
 
   OpenGpio();
