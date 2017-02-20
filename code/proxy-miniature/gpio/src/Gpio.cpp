@@ -74,8 +74,8 @@ void Gpio::setUp()
   std::vector<std::string> initialDirectionsVector =
       odcore::strings::StringToolbox::split(initialDirectionsString, ',');
 
-  if (pinsString.size() == initialValuesVector.size() 
-      && pinsString.size() == initialDirectionsVector.size()) {
+  if (pinsVector.size() == initialValuesVector.size() 
+      && pinsVector.size() == initialDirectionsVector.size()) {
     for (uint32_t i = 0; i < pinsString.size(); i++) {
       uint16_t pin = std::stoi(pinsVector.at(i));
       bool value = static_cast<bool>(std::stoi(initialValuesVector.at(i)));
@@ -84,10 +84,12 @@ void Gpio::setUp()
         m_pins.push_back(pin);
         m_initialValuesDirections.push_back(std::make_pair(value, direction));
       } else {
-        cerr << "Invalid direction for pin " << pin << "." << std::endl;
+        cerr << "[" << getName() << "] " << "Invalid direction for pin " << pin << "." << std::endl;
       }
     }
-  } 
+  } else {
+    cerr << << "[" << getName() << "] " << "Number of pins do not equals to number of values or directions" << std::endl;
+  }
 
   OpenGpio();
 
