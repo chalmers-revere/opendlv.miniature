@@ -87,6 +87,17 @@ void Gpio::setUp()
         cerr << "[" << getName() << "] " << "Invalid direction for pin " << pin << "." << std::endl;
       }
     }
+    if (m_debug) {
+      std::cout << "[" << getName() << "] " << "Initialised pins: ";
+      for (auto pin : m_pins) {
+        std:: cout << pin << " ";
+      }
+      std::cout << "(Value, direction): ";
+      for (auto pair : m_initialValuesDirections) {
+        std::cout << "(" << pair.first << "," << pair.second << ") ";
+      }
+      std::cout << std::endl;
+    }
   } else {
     cerr << "[" << getName() << "] " << "Number of pins do not equals to number of values or directions" << std::endl;
   }
