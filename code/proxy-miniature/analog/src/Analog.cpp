@@ -29,7 +29,7 @@
 #include <odvdopendlvdata/GeneratedHeaders_ODVDOpenDLVData.h>
 #include <opendavinci/odcore/strings/StringToolbox.h>
 
-#include "analog.h"
+#include "Analog.h"
 
 namespace opendlv {
 namespace proxy {
@@ -70,7 +70,6 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Analog::body()
   while (getModuleStateAndWaitForRemainingTimeInTimeslice() == odcore::data::dmcp::ModuleStateMessage::RUNNING) {
     std::vector<std::pair<uint16_t, float>> reading = getReadings();
     for (std::pair<uint16_t, float> const& pair : reading) {
-      // std::cout << "Pin " << pair.first << ": " << pair.second << " ";
       opendlv::proxy::AnalogReading message(pair.first, pair.second);
       odcore::data::Container c(message);
       getConference().send(c);

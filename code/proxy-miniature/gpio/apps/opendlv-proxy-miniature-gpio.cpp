@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 Chalmers REVERE
+/**
+ * proxy-relays - Interface to relays.
+ * Copyright (C) 2016 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,17 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-message opendlv.proxy.DigitalRequest [id = 170] {
-  uint16 pin [id = 1];
-  int32 value [id = 2];
-}
+#include "Gpio.h"
 
-message opendlv.proxy.DigitalReading [id = 159] {
-  uint16 pin [id = 1];
-  int32 Value [id = 2];
-}
-
-message opendlv.proxy.AnalogReading [id = 173] {
-  uint16 pin [id = 1];
-  float value [id = 2];
+int32_t main(int32_t argc, char **argv) {
+    opendlv::proxy::miniature::Gpio gpio(argc, argv);
+    return gpio.runModule();
 }

@@ -23,7 +23,7 @@
 #include "cxxtest/TestSuite.h"
 
 // Include local header files.
-#include "../include/analog.h"
+#include "../include/Analog.h"
 
 class AnalogTest : public CxxTest::TestSuite {
    public:

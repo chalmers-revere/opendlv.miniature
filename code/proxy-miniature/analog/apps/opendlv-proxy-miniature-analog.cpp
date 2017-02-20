@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "analog.h"
+#include "Analog.h"
 
 int32_t main(int32_t argc, char **argv) {
     opendlv::proxy::miniature::Analog analog(argc, argv);
