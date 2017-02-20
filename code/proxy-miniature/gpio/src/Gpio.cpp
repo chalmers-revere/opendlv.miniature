@@ -154,9 +154,9 @@ void Gpio::OpenGpio()
   std::ofstream exportFile(filename, std::ofstream::out);
   
   if (exportFile.is_open()) {
-    for (uint16_t i = 0; i < m_pins.size(); i++) {
-      uint16_t pin = m_pins[i];
+    for (auto pin : m_pins) {
       exportFile << pin;
+      exportFile.flush();
     }
     Reset();
   } else {
@@ -171,10 +171,15 @@ void Gpio::CloseGpio()
   std::string filename = m_path + "/unexport";
   std::ofstream unexportFile(filename, std::ofstream::out);
   
-  for (uint16_t pin : m_pins) {
-    unexportFile << pin;
+  if (unexportFile.is_open()) {
+    for (auto pin : m_pins) {
+      unexportFile << pin;
+      unexportFile.flush();
+    }
+  } else {
+    cerr << "[" << getName() << "] Could not open " << filename << "." 
+        << std::endl;
   }
-
   unexportFile.close();
 }
 
@@ -199,6 +204,7 @@ void Gpio::SetDirection(uint16_t const a_pin, std::string const a_str)
   std::ofstream gpioDirectionFile(gpioDirectionFilename, std::ofstream::out);
   if (gpioDirectionFile.is_open()) {
     gpioDirectionFile << a_str;
+    gpioDirectionFile.flush();
   } else {
     cerr << "[" << getName() << "] Could not open " << gpioDirectionFilename 
         << "." << std::endl;
@@ -234,6 +240,7 @@ void Gpio::SetValue(uint16_t const a_pin, bool const val)
   std::ofstream gpioValueFile(gpioValueFilename, std::ofstream::out);
   if (gpioValueFile.is_open()) {
     gpioValueFile << static_cast<uint16_t>(val);
+    gpioValueFile.flush();
   } else {
     cerr << "[" << getName() << "] Could not open " << gpioValueFilename 
         << "." << std::endl;
