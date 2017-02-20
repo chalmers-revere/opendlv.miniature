@@ -104,6 +104,7 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Gpio::body()
   while (getModuleStateAndWaitForRemainingTimeInTimeslice() == 
       odcore::data::dmcp::ModuleStateMessage::RUNNING) {
     if (m_debug) {
+      std::cout << "Number of pins: " << m_pins.size() << std::endl;
       for (auto it : m_pins) {
         std::cout << "[" << getName() << "] Pin: " << it 
             << " Direction: " << ReadDirection(it) 

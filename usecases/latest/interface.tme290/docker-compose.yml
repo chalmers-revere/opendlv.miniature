@@ -8,6 +8,7 @@ services:
 
     proxy-miniature-gpio-0:
         build: .
+        privileged: true    #writing to /sys/
         network_mode: "host"
         command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-gpio --cid=${CID} --freq=1 --id=1"
     
