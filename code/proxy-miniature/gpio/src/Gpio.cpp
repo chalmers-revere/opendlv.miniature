@@ -35,7 +35,7 @@ namespace proxy {
 namespace miniature {
 
 Gpio::Gpio(const int &argc, char **argv)
-    : TimeTriggeredConferenceClientModule(argc, argv, "proxy-relay")
+    : TimeTriggeredConferenceClientModule(argc, argv, "proxy-miniature-gpio")
     , m_debug()
     , m_initialised()
     , m_initialValuesDirections()
