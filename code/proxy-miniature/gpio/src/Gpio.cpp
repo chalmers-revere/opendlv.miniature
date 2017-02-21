@@ -1,5 +1,5 @@
 /**
- * proxy-relays - Interface to relays.
+ * proxy-miniature-gpio - Interface to gpio.
  * Copyright (C) 2016 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
@@ -84,7 +84,8 @@ void Gpio::setUp()
         m_pins.push_back(pin);
         m_initialValuesDirections.push_back(std::make_pair(value, direction));
       } else {
-        cerr << "[" << getName() << "] " << "Invalid direction for pin " << pin << "." << std::endl;
+        cerr << "[" << getName() << "] " << "Invalid direction for pin " 
+            << pin << "." << std::endl;
       }
     }
     if (m_debug) {
@@ -99,7 +100,9 @@ void Gpio::setUp()
       std::cout << std::endl;
     }
   } else {
-    cerr << "[" << getName() << "] " << "Number of pins do not equals to number of values or directions" << std::endl;
+    cerr << "[" << getName() 
+        << "] Number of pins do not equals to number of values or directions" 
+        << std::endl;
   }
 
   OpenGpio();
@@ -116,12 +119,20 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Gpio::body()
 {
   while (getModuleStateAndWaitForRemainingTimeInTimeslice() == 
       odcore::data::dmcp::ModuleStateMessage::RUNNING) {
+    for (auto pin : m_pins) {
+      // std::string direction = GetDirection(pin);
+      bool value = GetValue(pin);
+      opendlv::proxy::DigitalReading reading(pin, value);
+      odcore::data::Container c(reading);
+      getConference().send(c);
+    }
+
     if (m_debug) {
       std::cout << "Number of pins: " << m_pins.size() << std::endl;
-      for (auto it : m_pins) {
-        std::cout << "[" << getName() << "] Pin: " << it 
-            << " Direction: " << ReadDirection(it) 
-            << " Value: " << ReadValue(it) 
+      for (auto pin : m_pins) {
+        std::cout << "[" << getName() << "] Pin: " << pin 
+            << " Direction: " << GetDirection(pin) 
+            << " Value: " << GetValue(pin) 
             << "." << std::endl;
       }
     }
@@ -129,23 +140,21 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Gpio::body()
   return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;
 }
 
-void Gpio::nextContainer(odcore::data::Container &)
+void Gpio::nextContainer(odcore::data::Container &a_container)
 {
-  // if (a_container.getDataType() == opendlv::proxy::RelayRequest::ID()) {
-  //   opendlv::proxy::RelayRequest request = 
-  //       a_container.getData<opendlv::proxy::RelayRequest>();
-
-  //   uint32_t deviceId = request.getDeviceId();
-
-  //   if (deviceId != getIdentifier()) {
-  //     return;
-  //   }
-
-  //   bool relayValue = request.getRelayValue();
-  //   uint8_t relayIndex = request.getRelayIndex();
-
-  //   m_gpio->SetValue(relayIndex, relayValue);
-  // }
+  if (a_container.getDataType() == opendlv::proxy::DigitalRequest::ID()) {
+    opendlv::proxy::DigitalRequest request = 
+        a_container.getData<opendlv::proxy::DigitalRequest>();
+    uint16_t pin = request.getPin();
+    bool value = (request.getValue() == 1);
+    if (GetDirection(pin).compare("out")) {
+      SetValue(pin, value);
+    } else {
+      cerr << "[" << getName() << "] The requested pin " << pin
+          << " is read-only." 
+          << std::endl;
+    }
+  }
 }
 
 void Gpio::OpenGpio()
@@ -213,7 +222,7 @@ void Gpio::SetDirection(uint16_t const a_pin, std::string const a_str)
   gpioDirectionFile.close();
 }
 
-std::string Gpio::ReadDirection(uint16_t const a_pin) const
+std::string Gpio::GetDirection(uint16_t const a_pin) const
 {
   std::string gpioDirectionFilename = m_path + "/gpio" + std::to_string(a_pin) 
       + "/direction";
@@ -235,7 +244,8 @@ std::string Gpio::ReadDirection(uint16_t const a_pin) const
 
 void Gpio::SetValue(uint16_t const a_pin, bool const val)
 {
-  std::string gpioValueFilename = m_path + "/gpio" + std::to_string(a_pin) + "/value";
+  std::string gpioValueFilename = 
+      m_path + "/gpio" + std::to_string(a_pin) + "/value";
 
   std::ofstream gpioValueFile(gpioValueFilename, std::ofstream::out);
   if (gpioValueFile.is_open()) {
@@ -248,9 +258,10 @@ void Gpio::SetValue(uint16_t const a_pin, bool const val)
   gpioValueFile.close();
 }
 
-bool Gpio::ReadValue(uint16_t const a_pin) const
+bool Gpio::GetValue(uint16_t const a_pin) const
 {
-  std::string gpioValueFilename = m_path + "/gpio" + std::to_string(a_pin) + "/value";
+  std::string gpioValueFilename = 
+      m_path + "/gpio" + std::to_string(a_pin) + "/value";
   std::string line;
 
   std::ifstream gpioValueFile(gpioValueFilename, std::ifstream::in);
@@ -263,7 +274,7 @@ bool Gpio::ReadValue(uint16_t const a_pin) const
     cerr << "[" << getName() << "] Could not open " << gpioValueFilename 
         << "." << std::endl;
     gpioValueFile.close();
-    return false;
+    return NULL;
   }
 }
 

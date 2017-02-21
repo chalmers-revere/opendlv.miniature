@@ -77,3 +77,11 @@ proxy-miniature-gpio.systemPath = /sys/class/gpio
 proxy-miniature-gpio.pins = 30,31
 proxy-miniature-gpio.values = 0,1
 proxy-miniature-gpio.directions = in,out
+
+###############################################################################
+###############################################################################
+#
+# CONFIGURATION FOR SYSTEM
+#
+
+system-miniature-example.digital-pins = 31

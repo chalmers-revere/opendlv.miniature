@@ -1,5 +1,4 @@
 /**
- * proxy-miniature-gpio - Interface to gpio.
  * Copyright (C) 2016 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
@@ -17,30 +16,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef PROXY_MINIATURE_GPIO_H
-#define PROXY_MINIATURE_GPIO_H
+#ifndef SYSTEM_MINIATURE_EXAMPLE_H
+#define SYSTEM_MINIATURE_EXAMPLE_H
 
 
 #include <memory>
-#include <string>
-#include <vector>
-#include <utility>
 
 #include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
 
 namespace opendlv {
-namespace proxy {
+namespace system {
 namespace miniature {
 
-/**
- * Interface to GPIO.
- */
-class Gpio : public odcore::base::module::TimeTriggeredConferenceClientModule {
+class Example : public odcore::base::module::TimeTriggeredConferenceClientModule {
  public:
-  Gpio(const int &, char **);
-  Gpio(const Gpio &) = delete;
-  Gpio &operator=(const Gpio &) = delete;
-  virtual ~Gpio();
+  Example(const int &, char **);
+  Example(const Example &) = delete;
+  Example &operator=(const Example &) = delete;
+  virtual ~Example();
   virtual void nextContainer(odcore::data::Container &);
 
  private:
@@ -48,19 +41,7 @@ class Gpio : public odcore::base::module::TimeTriggeredConferenceClientModule {
   void tearDown();
   virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
 
-  void OpenGpio();
-  void CloseGpio();
-  void Reset();
-  void SetDirection(uint16_t const, std::string);
-  std::string GetDirection(uint16_t const) const;
-  void SetValue(uint16_t const, bool const);
-  bool GetValue(uint16_t const) const;
-
-  bool m_debug;
-  bool m_initialised;
-  std::vector<std::pair<bool, std::string>> m_initialValuesDirections;
-  std::string m_path;
-  std::vector<uint16_t> m_pins;
+  std::vector<uint16_t> m_digitalPins;
 };
 
 }
