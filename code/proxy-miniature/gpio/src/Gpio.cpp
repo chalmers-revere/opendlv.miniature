@@ -80,7 +80,7 @@ void Gpio::setUp()
       uint16_t pin = std::stoi(pinsVector.at(i));
       bool value = static_cast<bool>(std::stoi(initialValuesVector.at(i)));
       std::string direction = initialDirectionsVector.at(i);
-      if (direction.compare("out") || direction.compare("in")) {
+      if (direction.compare("out") == 0 || direction.compare("in") == 0) {
         m_pins.push_back(pin);
         m_initialValuesDirections.push_back(std::make_pair(value, direction));
       } else {
@@ -147,7 +147,7 @@ void Gpio::nextContainer(odcore::data::Container &a_container)
         a_container.getData<opendlv::proxy::DigitalRequest>();
     uint16_t pin = request.getPin();
     bool value = (request.getValue() == 1);
-    if (GetDirection(pin).compare("out")) {
+    if (GetDirection(pin).compare("out") == 0) {
       SetValue(pin, value);
     } else {
       cerr << "[" << getName() << "] The requested pin " << pin
@@ -199,7 +199,7 @@ void Gpio::Reset()
     bool initialValue = m_initialValuesDirections[i].first;
     std::string initialDirection = m_initialValuesDirections[i].second;
     SetDirection(pin, initialDirection);
-    if (initialDirection.compare("out")) {
+    if (initialDirection.compare("out") == 0) {
       SetValue(pin, initialValue);
     }
   }
