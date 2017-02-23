@@ -80,7 +80,7 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Example::body()
     }
     for (auto pin : m_pwmPins) {
       int32_t rand = (std::rand() % 11) - 5 ;
-      uint32_t value = 1500000 + rand;
+      uint32_t value = 1500000 + rand * 100000;
       opendlv::proxy::PwmRequest request(pin, value);
       odcore::data::Container c(request);
       getConference().send(c);

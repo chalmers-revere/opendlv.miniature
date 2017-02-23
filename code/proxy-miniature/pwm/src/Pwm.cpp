@@ -108,6 +108,9 @@ void Pwm::tearDown()
 
 void Pwm::nextContainer(odcore::data::Container &a_container)
 {
+  if (!m_initialised) {
+    return;
+  }
   if (a_container.getDataType() == opendlv::proxy::PwmRequest::ID()) {
     opendlv::proxy::PwmRequest request = 
         a_container.getData<opendlv::proxy::PwmRequest>();
@@ -226,7 +229,7 @@ uint32_t Pwm::GetDutyCycle(uint16_t const a_pin) const
     cerr << "[" << getName() << "] Could not open " << filename 
         << "." << std::endl;
     file.close();
-    return NULL;
+    return NAN;
   }
 }
 
@@ -260,7 +263,7 @@ uint32_t Pwm::GetPeriod(uint16_t const a_pin) const
     cerr << "[" << getName() << "] Could not open " << filename 
         << "." << std::endl;
     file.close();
-    return NULL;
+    return NAN;
   }
 }
 

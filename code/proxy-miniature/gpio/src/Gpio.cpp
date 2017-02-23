@@ -142,6 +142,9 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Gpio::body()
 
 void Gpio::nextContainer(odcore::data::Container &a_container)
 {
+  if (!m_initialised) {
+    return;
+  }
   if (a_container.getDataType() == opendlv::proxy::DigitalRequest::ID()) {
     opendlv::proxy::DigitalRequest request = 
         a_container.getData<opendlv::proxy::DigitalRequest>();
