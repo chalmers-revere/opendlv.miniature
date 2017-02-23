@@ -1,4 +1,5 @@
 /**
+ * proxy-relays - Interface to relays.
  * Copyright (C) 2016 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
@@ -16,37 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SYSTEM_MINIATURE_EXAMPLE_H
-#define SYSTEM_MINIATURE_EXAMPLE_H
+#include "Pwm.h"
 
-
-#include <memory>
-
-#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
-
-namespace opendlv {
-namespace system {
-namespace miniature {
-
-class Example : public odcore::base::module::TimeTriggeredConferenceClientModule {
- public:
-  Example(const int &, char **);
-  Example(const Example &) = delete;
-  Example &operator=(const Example &) = delete;
-  virtual ~Example();
-  virtual void nextContainer(odcore::data::Container &);
-
- private:
-  void setUp();
-  void tearDown();
-  virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-
-  std::vector<uint16_t> m_digitalPins;
-  std::vector<uint16_t> m_pwmPins;
-};
-
+int32_t main(int32_t argc, char **argv) {
+    opendlv::proxy::miniature::Pwm pwm(argc, argv);
+    return pwm.runModule();
 }
-}
-}
-
-#endif

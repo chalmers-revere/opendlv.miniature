@@ -49,6 +49,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES})
 # Add subfolders with sources.
 add_subdirectory(analog)
 add_subdirectory(gpio)
+add_subdirectory(pwm)
 
 ###########################################################################
 # Enable CPack to create .deb and .rpm.

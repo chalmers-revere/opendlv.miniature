@@ -35,6 +35,7 @@ namespace miniature {
 Example::Example(const int &argc, char **argv)
     : TimeTriggeredConferenceClientModule(argc, argv, "system-miniature-example")
     , m_digitalPins()
+    , m_pwmPins()
 {
 }
 
@@ -52,6 +53,13 @@ void Example::setUp()
   for (auto pin : digitalPinsVector) {
     m_digitalPins.push_back(std::stoi(pin)); 
   }
+  std::string const pwmPinsString = 
+      kv.getValue<std::string>("system-miniature-example.pwm-pins");
+  std::vector<std::string> pwmPinsVector = 
+      odcore::strings::StringToolbox::split(pwmPinsString, ',');
+  for (auto pin : pwmPinsVector) {
+    m_pwmPins.push_back(std::stoi(pin));
+  }
 }
 
 void Example::tearDown()
@@ -68,6 +76,15 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Example::body()
       odcore::data::Container c(request);
       getConference().send(c);
       std::cout << "[" << getName() << "] Sending DigitalRequest: " 
+          << request.toString() << std::endl;
+    }
+    for (auto pin : m_pwmPins) {
+      int32_t rand = (std::rand() % 11) - 5 ;
+      uint32_t value = 1500000 + rand;
+      opendlv::proxy::PwmRequest request(pin, value);
+      odcore::data::Container c(request);
+      getConference().send(c);
+      std::cout << "[" << getName() << "] Sending PwmRequest: " 
           << request.toString() << std::endl;
     }
   }
