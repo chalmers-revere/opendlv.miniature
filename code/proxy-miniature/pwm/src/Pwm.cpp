@@ -229,7 +229,7 @@ uint32_t Pwm::GetDutyCycle(uint16_t const a_pin) const
     cerr << "[" << getName() << "] Could not open " << filename 
         << "." << std::endl;
     file.close();
-    return NAN;
+    return 0;
   }
 }
 
@@ -263,7 +263,7 @@ uint32_t Pwm::GetPeriod(uint16_t const a_pin) const
     cerr << "[" << getName() << "] Could not open " << filename 
         << "." << std::endl;
     file.close();
-    return NAN;
+    return 0;
   }
 }
 
