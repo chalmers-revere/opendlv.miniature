@@ -68,7 +68,7 @@ void Pwm::setUp()
       odcore::strings::StringToolbox::split(periodString, ',');
   
   std::string const dutyCycleString =
-      kv.getValue<std::string>("proxy-miniature-pwm.dutyCycle");
+      kv.getValue<std::string>("proxy-miniature-pwm.dutyCycles");
   std::vector<std::string> dutyCycleStringVector =
       odcore::strings::StringToolbox::split(dutyCycleString, ',');
 
