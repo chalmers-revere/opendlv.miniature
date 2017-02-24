@@ -1,5 +1,4 @@
 /**
- * analogtestsuite - Test cases for the analog pin interface.
  * Copyright (C) 2016 Revere
  *
  * This program is free software; you can redistribute it and/or
@@ -17,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef ANALOG_TESTSUITE_H
-#define ANALOG_TESTSUITE_H
+#ifndef EXAMPLE_TESTSUITE_H
+#define EXAMPLE_TESTSUITE_H
 
 #include "cxxtest/TestSuite.h"
 
 // Include local header files.
-#include "../include/analog.h"
+#include "../include/Example.h"
 
-class AnalogTest : public CxxTest::TestSuite {
+class ExampleTest : public CxxTest::TestSuite {
    public:
     void setUp() {}
 
