@@ -41,7 +41,8 @@ class Example : public odcore::base::module::TimeTriggeredConferenceClientModule
   void tearDown();
   virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
 
-  std::vector<uint16_t> m_digitalPins;
+  std::vector<uint16_t> m_gpioPins;
+  std::vector<uint16_t> m_pwmPins;
 };
 
 }

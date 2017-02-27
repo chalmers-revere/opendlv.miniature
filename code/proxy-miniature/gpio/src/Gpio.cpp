@@ -122,11 +122,16 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Gpio::body()
     for (auto pin : m_pins) {
       // std::string direction = GetDirection(pin);
       bool value = GetValue(pin);
-      opendlv::proxy::DigitalReading reading(pin, value);
+      opendlv::proxy::ToggleReading::ToggleState state;
+      if (value) {
+        state = opendlv::proxy::ToggleReading::On;
+      } else {
+        state = opendlv::proxy::ToggleReading::Off;
+      }
+      opendlv::proxy::ToggleReading reading(pin, state);
       odcore::data::Container c(reading);
       getConference().send(c);
     }
-
     if (m_debug) {
       std::cout << "Number of pins: " << m_pins.size() << std::endl;
       for (auto pin : m_pins) {
@@ -142,11 +147,15 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Gpio::body()
 
 void Gpio::nextContainer(odcore::data::Container &a_container)
 {
-  if (a_container.getDataType() == opendlv::proxy::DigitalRequest::ID()) {
-    opendlv::proxy::DigitalRequest request = 
-        a_container.getData<opendlv::proxy::DigitalRequest>();
+  if (!m_initialised) {
+    return;
+  }
+  (void) a_container;
+  if (a_container.getDataType() == opendlv::proxy::ToggleRequest::ID()) {
+    opendlv::proxy::ToggleRequest request = 
+        a_container.getData<opendlv::proxy::ToggleRequest>();
     uint16_t pin = request.getPin();
-    bool value = (request.getValue() == 1);
+    bool value = request.getState();
     if (GetDirection(pin).compare("out") == 0) {
       SetValue(pin, value);
     } else {
@@ -242,14 +251,14 @@ std::string Gpio::GetDirection(uint16_t const a_pin) const
   }
 }
 
-void Gpio::SetValue(uint16_t const a_pin, bool const val)
+void Gpio::SetValue(uint16_t const a_pin, bool const a_value)
 {
   std::string gpioValueFilename = 
       m_path + "/gpio" + std::to_string(a_pin) + "/value";
 
   std::ofstream gpioValueFile(gpioValueFilename, std::ofstream::out);
   if (gpioValueFile.is_open()) {
-    gpioValueFile << static_cast<uint16_t>(val);
+    gpioValueFile << static_cast<uint16_t>(a_value);
     gpioValueFile.flush();
   } else {
     cerr << "[" << getName() << "] Could not open " << gpioValueFilename 

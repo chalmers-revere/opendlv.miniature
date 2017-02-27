@@ -34,7 +34,8 @@ namespace miniature {
 
 Example::Example(const int &argc, char **argv)
     : TimeTriggeredConferenceClientModule(argc, argv, "system-miniature-example")
-    , m_digitalPins()
+    , m_gpioPins()
+    , m_pwmPins()
 {
 }
 
@@ -45,12 +46,19 @@ Example::~Example()
 void Example::setUp()
 {
   odcore::base::KeyValueConfiguration kv = getKeyValueConfiguration();
-  std::string const digitalPinsString = 
-      kv.getValue<std::string>("system-miniature-example.digital-pins");
-  std::vector<std::string> digitalPinsVector = 
-      odcore::strings::StringToolbox::split(digitalPinsString, ',');
-  for (auto pin : digitalPinsVector) {
-    m_digitalPins.push_back(std::stoi(pin)); 
+  std::string const gpioPinsString = 
+      kv.getValue<std::string>("system-miniature-example.gpio-pins");
+  std::vector<std::string> gpioPinsVector = 
+      odcore::strings::StringToolbox::split(gpioPinsString, ',');
+  for (auto pin : gpioPinsVector) {
+    m_gpioPins.push_back(std::stoi(pin)); 
+  }
+  std::string const pwmPinsString = 
+      kv.getValue<std::string>("system-miniature-example.pwm-pins");
+  std::vector<std::string> pwmPinsVector = 
+      odcore::strings::StringToolbox::split(pwmPinsString, ',');
+  for (auto pin : pwmPinsVector) {
+    m_pwmPins.push_back(std::stoi(pin));
   }
 }
 
@@ -62,12 +70,27 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Example::body()
 {
   while (getModuleStateAndWaitForRemainingTimeInTimeslice() == 
       odcore::data::dmcp::ModuleStateMessage::RUNNING) {
-    for (auto pin : m_digitalPins) {
-      int32_t value = std::rand() % 2;
-      opendlv::proxy::DigitalRequest request(pin, value);
+    for (auto pin : m_gpioPins) {
+      bool value = static_cast<bool>(std::rand() % 2);
+      opendlv::proxy::ToggleRequest::ToggleState state;
+      if (value) {
+        state = opendlv::proxy::ToggleRequest::On;
+      } else {
+        state = opendlv::proxy::ToggleRequest::Off;
+      }
+      opendlv::proxy::ToggleRequest request(pin, state);
       odcore::data::Container c(request);
       getConference().send(c);
-      std::cout << "[" << getName() << "] Sending DigitalRequest: " 
+      std::cout << "[" << getName() << "] Sending ToggleRequest: " 
+          << request.toString() << std::endl;
+    }
+    for (auto pin : m_pwmPins) {
+      int32_t rand = (std::rand() % 11) - 5 ;
+      uint32_t value = 1500000 + rand * 100000;
+      opendlv::proxy::PwmRequest request(pin, value);
+      odcore::data::Container c(request);
+      getConference().send(c);
+      std::cout << "[" << getName() << "] Sending PwmRequest: " 
           << request.toString() << std::endl;
     }
   }
@@ -82,10 +105,10 @@ void Example::nextContainer(odcore::data::Container &a_c)
         a_c.getData<opendlv::proxy::AnalogReading>();
     std::cout << "[" << getName() << "] Received an AnalogReading: " 
         << reading.toString() << "." << std::endl;
-  } else if (dataType == opendlv::proxy::DigitalReading::ID()) {
-    opendlv::proxy::DigitalReading reading = 
-        a_c.getData<opendlv::proxy::DigitalReading>();
-    std::cout << "[" << getName() << "] Received a DigitalReading: "
+  } else if (dataType == opendlv::proxy::ToggleReading::ID()) {
+    opendlv::proxy::ToggleReading reading = 
+        a_c.getData<opendlv::proxy::ToggleReading>();
+    std::cout << "[" << getName() << "] Received a ToggleReading: "
         << reading.toString() << "." << std::endl;
   }
 }

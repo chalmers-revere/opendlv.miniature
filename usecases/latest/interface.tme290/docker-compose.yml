@@ -28,5 +28,8 @@ services:
 
     proxy-miniature-pwm-0:
         build: .
+        privileged: true    #writing to /sys/
+        volumes:
+            - /sys/:/sys/
         network_mode: "host"
-        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-pwm --cid=${CID} --freq=100 --id=1"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-pwm --cid=${CID} --id=1"
