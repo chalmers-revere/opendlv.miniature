@@ -16,22 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-message opendlv.proxy.DigitalRequest [id = 170] {
+message opendlv.proxy.ToggleRequest [id = 170] {
+  enum ToggleState {
+    Off = 0,
+    On = 1,
+  };
   uint16 pin [id = 1];
-  int32 value [id = 2];
+  ToggleState state [id = 2];
 }
 
-message opendlv.proxy.DigitalReading [id = 159] {
+message opendlv.proxy.ToggleReading [id = 159] {
+  enum ToggleState {
+    Off = 0,
+    On = 1,
+  };
   uint16 pin [id = 1];
-  int32 value [id = 2];
+  ToggleState state [id = 2];
 }
 
 message opendlv.proxy.PwmRequest [id = 155] {
   uint16 pin [id = 1];
-  uint32 dutyCycle [id = 2];
+  uint32 dutyCycleNs [id = 2];
 }
 
 message opendlv.proxy.AnalogReading [id = 173] {
   uint16 pin [id = 1];
-  float value [id = 2];
+  float voltage [id = 2];
 }

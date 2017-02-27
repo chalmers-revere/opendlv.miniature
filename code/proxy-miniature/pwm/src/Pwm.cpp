@@ -40,8 +40,8 @@ Pwm::Pwm(const int &argc, char **argv)
     , m_initialised()
     , m_path()
     , m_pins()
-    , m_periods()
-    , m_dutyCycles()
+    , m_periodsNs()
+    , m_dutyCyclesNs()
 {
 }
 
@@ -62,31 +62,31 @@ void Pwm::setUp()
   std::vector<std::string> pinsVector = 
       odcore::strings::StringToolbox::split(pinsString, ',');
 
-  std::string const periodString = 
-      kv.getValue<std::string>("proxy-miniature-pwm.periods");
-  std::vector<std::string> periodStringVector = 
-      odcore::strings::StringToolbox::split(periodString, ',');
+  std::string const periodNsString = 
+      kv.getValue<std::string>("proxy-miniature-pwm.periodsNs");
+  std::vector<std::string> periodNsStringVector = 
+      odcore::strings::StringToolbox::split(periodNsString, ',');
   
-  std::string const dutyCycleString =
-      kv.getValue<std::string>("proxy-miniature-pwm.dutyCycles");
-  std::vector<std::string> dutyCycleStringVector =
-      odcore::strings::StringToolbox::split(dutyCycleString, ',');
+  std::string const dutyCycleNsString =
+      kv.getValue<std::string>("proxy-miniature-pwm.dutyCyclesNs");
+  std::vector<std::string> dutyCycleNsStringVector =
+      odcore::strings::StringToolbox::split(dutyCycleNsString, ',');
 
-  if (pinsVector.size() == periodStringVector.size() 
-      && pinsVector.size() == dutyCycleStringVector.size()) {
+  if (pinsVector.size() == periodNsStringVector.size() 
+      && pinsVector.size() == dutyCycleNsStringVector.size()) {
     for (uint32_t i = 0; i < pinsVector.size(); i++) {
       uint16_t pin = std::stoi(pinsVector.at(i));
-      int32_t period = std::stoi(periodStringVector.at(i));
-      int32_t dutyCycle = std::stoi(dutyCycleStringVector.at(i));
+      int32_t periodNs = std::stoi(periodNsStringVector.at(i));
+      int32_t dutyCycleNs = std::stoi(dutyCycleNsStringVector.at(i));
       m_pins.push_back(pin);
-      m_periods.push_back(period);
-      m_dutyCycles.push_back(dutyCycle);
+      m_periodsNs.push_back(periodNs);
+      m_dutyCyclesNs.push_back(dutyCycleNs);
     }
     if (m_debug) {
       std::cout << "[" << getName() << "] " << "Initialised pins:";
       for (uint32_t i = 0; i < pinsVector.size(); i++) {
-        std:: cout << "|Pin " << m_pins.at(i) << " Period " << m_periods.at(i) 
-            << " Duty cycle" << m_dutyCycles.at(i);
+        std:: cout << "|Pin " << m_pins.at(i) << " Period " << m_periodsNs.at(i) 
+            << " Duty cycle" << m_dutyCyclesNs.at(i);
       }
       std::cout << "." << std::endl;
     }
@@ -115,8 +115,8 @@ void Pwm::nextContainer(odcore::data::Container &a_container)
     opendlv::proxy::PwmRequest request = 
         a_container.getData<opendlv::proxy::PwmRequest>();
     uint16_t pin = request.getPin();
-    uint32_t dutyCycle = request.getDutyCycle();
-    SetDutyCycle(pin, dutyCycle);
+    uint32_t dutyCycleNs = request.getDutyCycleNs();
+    SetDutyCycleNs(pin, dutyCycleNs);
   }
 }
 
@@ -159,8 +159,8 @@ void Pwm::Reset()
 {
   for (uint8_t i = 0; i < m_pins.size(); i++) {
     SetEnabled(m_pins.at(i), false);
-    SetPeriod(m_pins.at(i), m_periods.at(i));
-    SetDutyCycle(m_pins.at(i), m_dutyCycles.at(i));
+    SetPeriodNs(m_pins.at(i), m_periodsNs.at(i));
+    SetDutyCycleNs(m_pins.at(i), m_dutyCyclesNs.at(i));
     SetEnabled(m_pins.at(i), true);
   }
 }
@@ -198,7 +198,7 @@ bool Pwm::GetEnabled(uint16_t const a_pin) const
   }
 }
 
-void Pwm::SetDutyCycle(uint16_t const a_pin, uint32_t const a_value)
+void Pwm::SetDutyCycleNs(uint16_t const a_pin, uint32_t const a_value)
 {
   std::string filename = m_path + "/pwm" + std::to_string(a_pin) + "/duty_cycle";
 
@@ -214,7 +214,7 @@ void Pwm::SetDutyCycle(uint16_t const a_pin, uint32_t const a_value)
   file.close();
 }
 
-uint32_t Pwm::GetDutyCycle(uint16_t const a_pin) const
+uint32_t Pwm::GetDutyCycleNs(uint16_t const a_pin) const
 {
   std::string filename = m_path + "/pwm" + std::to_string(a_pin) + "/duty_cycle";
   std::string line;
@@ -233,7 +233,7 @@ uint32_t Pwm::GetDutyCycle(uint16_t const a_pin) const
   }
 }
 
-void Pwm::SetPeriod(uint16_t const a_pin, uint32_t const a_value)
+void Pwm::SetPeriodNs(uint16_t const a_pin, uint32_t const a_value)
 {
   std::string filename = m_path + "/pwm" + std::to_string(a_pin) + "/period";
 
@@ -248,7 +248,7 @@ void Pwm::SetPeriod(uint16_t const a_pin, uint32_t const a_value)
   file.close();
 }
 
-uint32_t Pwm::GetPeriod(uint16_t const a_pin) const
+uint32_t Pwm::GetPeriodNs(uint16_t const a_pin) const
 {
   std::string filename = m_path + "/pwm" + std::to_string(a_pin) + "/period";
   std::string line;

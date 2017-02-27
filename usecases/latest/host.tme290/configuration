@@ -81,8 +81,8 @@ proxy-miniature-gpio.directions = in,out
 proxy-miniature-pwm.debug = 1
 proxy-miniature-pwm.systemPath = /sys/class/pwm/pwmchip2
 proxy-miniature-pwm.pins = 0,1
-proxy-miniature-pwm.periods = 20000000,20000000
-proxy-miniature-pwm.dutyCycles = 1500000,1500000
+proxy-miniature-pwm.periodsNs = 20000000,20000000
+proxy-miniature-pwm.dutyCyclesNs = 1500000,1500000
 
 
 ###############################################################################

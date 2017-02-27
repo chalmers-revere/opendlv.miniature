@@ -52,17 +52,17 @@ class Pwm : public odcore::base::module::DataTriggeredConferenceClientModule {
   void Reset();
   void SetEnabled(uint16_t const, bool const);
   bool GetEnabled(uint16_t const) const;
-  void SetDutyCycle(uint16_t const, uint32_t const);
-  uint32_t GetDutyCycle(uint16_t const) const;
-  void SetPeriod(uint16_t const, uint32_t const);
-  uint32_t GetPeriod(uint16_t const) const;
+  void SetDutyCycleNs(uint16_t const, uint32_t const);
+  uint32_t GetDutyCycleNs(uint16_t const) const;
+  void SetPeriodNs(uint16_t const, uint32_t const);
+  uint32_t GetPeriodNs(uint16_t const) const;
 
   bool m_debug;
   bool m_initialised;
   std::string m_path;
   std::vector<uint16_t> m_pins;
-  std::vector<uint32_t> m_periods;
-  std::vector<uint32_t> m_dutyCycles;
+  std::vector<uint32_t> m_periodsNs;
+  std::vector<uint32_t> m_dutyCyclesNs;
 };
 
 }

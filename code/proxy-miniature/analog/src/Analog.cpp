@@ -51,10 +51,13 @@ void Analog::setUp()
 {
   odcore::base::KeyValueConfiguration kv = getKeyValueConfiguration();
 
-  m_conversionConst = kv.getValue<float>("proxy-miniature-analog.conversion-constant");
+  m_conversionConst = 
+      kv.getValue<float>("proxy-miniature-analog.conversion-constant");
   m_debug = (kv.getValue<int32_t>("proxy-miniature-analog.debug") == 1);
-  std::string pinsString = kv.getValue<std::string>("proxy-miniature-analog.pins");
-  std::vector<std::string> pinsVecString = odcore::strings::StringToolbox::split(pinsString, ',');
+  std::string pinsString = 
+      kv.getValue<std::string>("proxy-miniature-analog.pins");
+  std::vector<std::string> pinsVecString = 
+      odcore::strings::StringToolbox::split(pinsString, ',');
   for(std::string const& str : pinsVecString) {
     m_pins.push_back(std::stoi(str));
   }
@@ -67,16 +70,16 @@ void Analog::tearDown()
 
 odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Analog::body()
 {
-  while (getModuleStateAndWaitForRemainingTimeInTimeslice() == odcore::data::dmcp::ModuleStateMessage::RUNNING) {
+  while (getModuleStateAndWaitForRemainingTimeInTimeslice() == 
+        odcore::data::dmcp::ModuleStateMessage::RUNNING) {
     std::vector<std::pair<uint16_t, float>> reading = getReadings();
     for (std::pair<uint16_t, float> const& pair : reading) {
       opendlv::proxy::AnalogReading message(pair.first, pair.second);
       odcore::data::Container c(message);
       getConference().send(c);
     }
-
     if(m_debug) {
-      std::cout << "[Proxy-miniature-analog] ";
+      std::cout << "[" << getName() << "] ";
       for (std::pair<uint16_t, float> const& pair : reading) {
         std::cout << "Pin " << pair.first << ": " << pair.second << " ";
       }
@@ -89,7 +92,8 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Analog::body()
 std::vector<std::pair<uint16_t, float>> Analog::getReadings() {
   std::vector<std::pair<uint16_t, float>> reading;
   for(uint16_t const pin : m_pins) {
-    std::string filename = "/sys/bus/iio/devices/iio:device0/in_voltage" + std::to_string(pin) + "_raw";
+    std::string filename = "/sys/bus/iio/devices/iio:device0/in_voltage" 
+        + std::to_string(pin) + "_raw";
     std::ifstream file(filename, std::ifstream::in);
     std::string line;
     if(file.is_open()){
@@ -97,7 +101,9 @@ std::vector<std::pair<uint16_t, float>> Analog::getReadings() {
       uint16_t rawReading = std::stoi(line);
       reading.push_back(std::make_pair(pin, rawReading*m_conversionConst));
     } else {
-      std::cerr << "[Proxy-miniature-analog] Could not read from analog input. (pin: " << pin << ", filename: " << filename << ")" << std::endl;
+      std::cerr << "[" << getName() 
+          << "] Could not read from analog input. (pin: " << pin 
+          << ", filename: " << filename << ")" << std::endl;
       reading.push_back(std::make_pair(pin,std::nanf("")));
     }
     file.close();
