@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "LpsQualisys.h"
+#include "Qualisys.h"
 
 int32_t main(int32_t argc, char **argv) {
-    opendlv::proxy::miniature::LpsQualisys lpsQualisys(argc, argv);
-    return lpsQualisys.runModule();
+    opendlv::proxy::miniature::Qualisys qualisys(argc, argv);
+    return qualisys.runModule();
 }

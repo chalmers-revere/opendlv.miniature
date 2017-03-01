@@ -49,7 +49,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES})
 # Add subfolders with sources.
 add_subdirectory(analog)
 add_subdirectory(gpio)
-add_subdirectory(lps-qualisys)
+add_subdirectory(qualisys)
 add_subdirectory(lps)
 add_subdirectory(pwm)
 

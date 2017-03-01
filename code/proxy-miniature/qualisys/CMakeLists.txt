@@ -16,7 +16,7 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-PROJECT (opendlv-proxy-miniature-lps-qualisys)
+PROJECT (opendlv-proxy-miniature-qualisys)
 
 ###########################################################################
 # Set the search path for .cmake files.

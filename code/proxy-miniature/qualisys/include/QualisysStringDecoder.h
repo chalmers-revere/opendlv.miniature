@@ -16,37 +16,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef PROXY_MINIATURE_LPS_QUALISYS_H
-#define PROXY_MINIATURE_LPS_QUALISYS_H
+#ifndef PROXY_MINIATURE_QUALISYSSTRINGDECODER_H
+#define PROXY_MINIATURE_QUALISYSSTRINGDECODER_H
 
-#include <memory>
+#include <sstream>
+#include <string>
 
-#include <opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h>
-#include <opendavinci/odcore/io/tcp/TCPConnection.h>
+#include <opendavinci/odcore/io/StringListener.h>
+#include <opendavinci/odcore/io/conference/ContainerConference.h>
 
 namespace opendlv {
 namespace proxy {
 namespace miniature {
-
-class LpsQualisys : public odcore::base::module::DataTriggeredConferenceClientModule {
-   public:
-    LpsQualisys(int32_t const &, char **);
-    LpsQualisys(LpsQualisys const &) = delete;
-    LpsQualisys &operator=(LpsQualisys const &) = delete;
-    virtual ~LpsQualisys();
-
+/**
+ * This class decodes data from the Qualisys unit.
+ */
+class QualisysStringDecoder : public odcore::io::StringListener {
    private:
-    virtual void setUp();
-    virtual void tearDown();
-    virtual void nextContainer(odcore::data::Container &);
+    QualisysStringDecoder(QualisysStringDecoder const &) = delete;
+    QualisysStringDecoder &operator=(QualisysStringDecoder const &) = delete;
 
+   public:
+    QualisysStringDecoder();
+    virtual ~QualisysStringDecoder();
 
-    std::shared_ptr<odcore::io::tcp::TCPConnection> m_qualisys;
+    virtual void nextString(const std::string &s);
 
-
+   // private:
 };
 
-} 
+}
 }
 }
 

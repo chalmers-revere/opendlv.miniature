@@ -1,6 +1,5 @@
 /**
- * analogtestsuite - Test cases for the analog pin interface.
- * Copyright (C) 2016 Revere
+ * Copyright (C) 2016 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +16,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef LPS_QUALISYS_TESTSUITE_H
-#define LPS_QUALISYS_TESTSUITE_H
+#include <iostream>
 
-#include "cxxtest/TestSuite.h"
+#include "QualisysStringDecoder.h"
 
-// Include local header files.
-#include "../include/LpsQualisys.h"
+namespace opendlv {
+namespace proxy {
+namespace miniature {
 
-class LpsQualisysTest : public CxxTest::TestSuite {
-   public:
-    void setUp() {}
+QualisysStringDecoder::QualisysStringDecoder() {}
 
-    void tearDown() {}
+QualisysStringDecoder::~QualisysStringDecoder() {}
 
-    void testApplication() {
-        TS_ASSERT(true);
-    }
-};
+void QualisysStringDecoder::nextString(std::string const &a_string) {
+  std::istringstream ss(a_string);
+  std::string msg;
+  std::cout << "[Qualisys] ";
+  while (getline(ss, msg)) {
+    std::cout << msg;
+  }
+  std::cout << std::endl;
 
-#endif
+}
+
+}
+}
+}
