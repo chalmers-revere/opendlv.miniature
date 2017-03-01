@@ -50,6 +50,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES})
 add_subdirectory(analog)
 add_subdirectory(gpio)
 add_subdirectory(lps-qualisys)
+add_subdirectory(lps)
 add_subdirectory(pwm)
 
 ###########################################################################
