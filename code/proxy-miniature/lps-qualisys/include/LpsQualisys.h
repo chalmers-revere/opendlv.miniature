@@ -16,36 +16,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef PROXY_MINIATURE_ANALOG_H
-#define PROXY_MINIATURE_ANALOG_H
+#ifndef PROXY_MINIATURE_LPS_QUALISYS_H
+#define PROXY_MINIATURE_LPS_QUALISYS_H
 
 #include <memory>
-#include <string>
-#include <utility>
 
-#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/io/tcp/TCPConnection.h>
 
 namespace opendlv {
 namespace proxy {
 namespace miniature {
 
-class Analog : public odcore::base::module::TimeTriggeredConferenceClientModule {
+class LpsQualisys : public odcore::base::module::DataTriggeredConferenceClientModule {
    public:
-    Analog(int32_t const &, char **);
-    Analog(Analog const &) = delete;
-    Analog &operator=(Analog const &) = delete;
-    virtual ~Analog();
+    LpsQualisys(int32_t const &, char **);
+    LpsQualisys(LpsQualisys const &) = delete;
+    LpsQualisys &operator=(LpsQualisys const &) = delete;
+    virtual ~LpsQualisys();
 
    private:
     virtual void setUp();
     virtual void tearDown();
-    virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-   
-    std::vector<std::pair<uint16_t, float>> getReadings();
-   
-    float m_conversionConst;
-    bool m_debug;
-    std::vector<uint16_t> m_pins;
+    virtual void nextContainer(odcore::data::Container &);
+
+
+    std::shared_ptr<odcore::io::tcp::TCPConnection> m_qualisys;
+
+
 };
 
 } 
