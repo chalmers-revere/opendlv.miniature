@@ -1,5 +1,6 @@
-#ifndef LINGUISTICS_V2VCAM_BUFFER_HPP
-#define LINGUISTICS_V2VCAM_BUFFER_HPP
+
+#ifndef PROXY_MINIATURE_BUFFER_H
+#define PROXY_MINIATURE_BUFFER_H
 
 #include <memory>
 #include <string>
@@ -9,14 +10,8 @@ namespace opendlv {
 namespace proxy {
 namespace miniature {
 
-/**
- * @brief For storing bytes in a buffer.
- */
 class Buffer {
   public:
-    /**
-     * @brief For reading a buffer.
-     */
     class Iterator {
       public:
         explicit Iterator(Buffer const *);
@@ -24,51 +19,53 @@ class Buffer {
         Iterator &operator=(Iterator const &) = delete;
         virtual ~Iterator();
         bool ReadBoolean();
-        unsigned char ReadByte();
-        std::shared_ptr<std::vector<unsigned char>> ReadBytes();
-        double ReadDouble();
-        float ReadFloat();
-        int ReadInteger();
-        int ReadInteger24();
-        long ReadLong();
-        short ReadShort();
+        uint8_t ReadByte();
+        std::shared_ptr<std::vector<uint8_t>> ReadBytes();
+        float ReadFloat32();
+        double ReadFloat64();
+        int8_t ReadInteger8();
+        int16_t ReadInteger16();
+        int32_t ReadInteger32();
+        int64_t ReadInteger64();
         std::string ReadString();
         void Reset();
 
       private:
-        void CheckOverflow(int);
-        bool HasBytesLeft(int);
+        void CheckOverflow(uint32_t);
+        bool HasBytesLeft(uint32_t);
    
         Buffer const *m_outer_buffer;
-        int m_read_pos;
+        uint32_t m_read_pos;
     };
 
+
+
     Buffer();
-    explicit Buffer(std::vector<unsigned char> const &);
+    explicit Buffer(std::vector<uint8_t> const &);
     Buffer(Buffer const &) = delete;
     Buffer &operator=(Buffer const &) = delete;
     virtual ~Buffer();
     void AppendBoolean(bool);
-    void AppendByte(unsigned char);
-    void AppendBytes(std::vector<unsigned char> const &);
-    void AppendBytesRaw(std::vector<unsigned char> const &);
-    void AppendDouble(double);
-    void AppendFloat(float);
-    void AppendInteger(int);
-    void AppendLong(long);
-    void AppendShort(short);
+    void AppendByte(uint8_t);
+    void AppendBytes(std::vector<uint8_t> const &);
+    void AppendBytesRaw(std::vector<uint8_t> const &);
+    void AppendFloat32(float);
+    void AppendFloat64(double);
+    void AppendInteger8(int8_t);
+    void AppendInteger16(int16_t);
+    void AppendInteger32(int32_t);
+    void AppendInteger64(int64_t);
     void AppendString(std::string const &);
     void AppendStringRaw(std::string const &);
-    std::vector<unsigned char> const &GetBytes() const;
+    std::vector<uint8_t> const &GetData() const;
+    std::string const GetDataString() const;
     std::shared_ptr<Buffer::Iterator> GetIterator() const;
-    int GetSize() const;
-    unsigned char ReadByte(int) const;
+    uint32_t GetSize() const;
 
   private:
-    void Append(std::vector<unsigned char> const &);
+    void Append(std::vector<uint8_t> const &);
 
-    std::vector<unsigned char> m_bytes;
-
+    std::vector<uint8_t> m_bytes;
 };
 
 }

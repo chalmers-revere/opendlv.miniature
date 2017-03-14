@@ -90,7 +90,9 @@ void Qualisys::setUp()
 
   uint8_t freq = 60;
 
-  TcpSendMsg("Version 1.10");
+  TcpSendMsg("Version 1.12");
+  TcpSendMsg("ByteOrder");
+  TcpSendMsg("GetState");
   TcpSendMsg("StreamFrames Frequency:" + std::to_string(freq) + " UDP:" 
       + std::to_string(CLIENT_PORT) + " 3DNoLabels");
 
@@ -116,17 +118,16 @@ void Qualisys::nextContainer(odcore::data::Container &)
 void Qualisys::TcpSendMsg(std::string const a_msg) const
 {
   Buffer buffer;
-  (void) a_msg;
 
   int32_t messageType = 1;
   int32_t bytesLength = 9 + a_msg.length();
 
-  buffer.AppendInteger(bytesLength);
-  buffer.AppendInteger(messageType);
+  buffer.AppendInteger32(bytesLength);
+  buffer.AppendInteger32(messageType);
   buffer.AppendStringRaw(a_msg);
   buffer.AppendByte(0);
-  
-  std::vector<unsigned char> bytes = buffer.GetBytes();
+  std::cout << "Sent: " << a_msg << std::endl;
+  std::vector<unsigned char> bytes = buffer.GetData();
   std::string bytesString(bytes.begin(),bytes.end());
   m_qualisysTCP->send(bytesString);
 }

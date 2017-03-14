@@ -68,7 +68,7 @@ odsupercomponent.pulsetimeack.exclude = odcockpit
 # CONFIGURATION FOR PROXY
 #
 
-proxy-miniature-qualisys.debug = 1
+proxy-miniature-qualisys.debug = 0
 proxy-miniature-qualisys.ip = 10.10.20.30
 proxy-miniature-qualisys.port = 22223
 proxy-miniature-qualisys.client-ip = 10.10.20.231

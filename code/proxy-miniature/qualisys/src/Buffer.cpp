@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstring>
 #include <iostream>
 #include <sstream>
@@ -19,195 +20,160 @@ Buffer::Iterator::~Iterator()
 {
 }
 
-void Buffer::Iterator::CheckOverflow(int a_count)
+void Buffer::Iterator::CheckOverflow(uint32_t a_data_length)
 {
-  if (!HasBytesLeft(a_count)) {
+  if (!HasBytesLeft(a_data_length)) {
     throw std::runtime_error("Packet buffer overflow.");
   }
 }
 
-bool Buffer::Iterator::HasBytesLeft(int a_count)
+bool Buffer::Iterator::HasBytesLeft(uint32_t a_data_length)
 {
-  int bytes_len = m_outer_buffer->GetSize();
+  uint32_t bytes_len = m_outer_buffer->GetSize();
 
-  return (bytes_len - m_read_pos + 1) > a_count; 
+  return (bytes_len - m_read_pos + 1) > a_data_length; 
 }
 
 bool Buffer::Iterator::ReadBoolean()
 {
-  unsigned char byte = ReadByte();
+  uint8_t byte = ReadByte();
   bool data = static_cast<bool>(byte);
   return data;
 }
 
 
-unsigned char Buffer::Iterator::ReadByte()
+uint8_t Buffer::Iterator::ReadByte()
 {
-  int count = 1;
-  CheckOverflow(count);
+  uint8_t const data_length = 1;
+  CheckOverflow(data_length);
 
-  unsigned char data = m_outer_buffer->m_bytes[m_read_pos];
-  m_read_pos += count;
-
- // std::cout << " byte @" << m_read_pos-count << ": " << (int)data 
- //     << std::endl;
+  uint8_t data = m_outer_buffer->m_bytes[m_read_pos];
+  m_read_pos += data_length;
 
   return data;
 }
 
-std::shared_ptr<std::vector<unsigned char>> Buffer::Iterator::ReadBytes()
+std::shared_ptr<std::vector<uint8_t>> Buffer::Iterator::ReadBytes()
 {
-  long count = ReadLong();
-  CheckOverflow(count);
+  int16_t const data_length = ReadInteger16();
+  CheckOverflow(data_length);
   
-  int const start_pos = m_read_pos;
-  int const end_pos = start_pos + count - 1;
+  uint32_t const start_pos = m_read_pos;
+  uint32_t const end_pos = start_pos + data_length - 1;
 
-  std::shared_ptr<std::vector<unsigned char>> data(
-      new std::vector<unsigned char>(count));
+  std::shared_ptr<std::vector<uint8_t>> data(
+      new std::vector<uint8_t>(data_length));
 
-  for (int i = start_pos, j = 0; end_pos >= i; ++i, ++j) {
+  for (uint32_t i = start_pos, j = 0; end_pos >= i; ++i, ++j) {
     (*data)[j] = m_outer_buffer->m_bytes[i];
   }
 
-  m_read_pos += count;
-
-//  std::cout << " bytes @" << start_pos << "-" << end_pos << ": " << data << 
-//      std::endl;
+  m_read_pos += data_length;
 
   return data;
 }
 
-double Buffer::Iterator::ReadDouble()
+float Buffer::Iterator::ReadFloat32()
 {
-  //int count = sizeof(double);
-  int count = 8;
-  CheckOverflow(count);
-
-  double data = 0.0;
-  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], count);
-  m_read_pos += count;
-
-//  std::cout << " double @" << m_read_pos-count << "-" << m_read_pos - 1
-//      << ": " << data << std::endl;
-
-  return data;
-}
-
-float Buffer::Iterator::ReadFloat()
-{
-  //int count = sizeof(float);
-  int count = 4;
-  CheckOverflow(count);
-
+  uint8_t const data_length = 4;
+  CheckOverflow(data_length);
 
   float data = 0.0;
-  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], count);
-  m_read_pos += count;
-
-//  std::cout << " float @" << m_read_pos-count << "-" << m_read_pos - 1 << ": " 
-//      << data << std::endl;
+  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], data_length);
+  m_read_pos += data_length;
 
   return data;
 }
 
-int Buffer::Iterator::ReadInteger()
+double Buffer::Iterator::ReadFloat64()
 {
-  //int const count = sizeof(int);
-  int const count = 4;
-  CheckOverflow(count);
+  uint8_t const data_length = 8;
+  CheckOverflow(data_length);
 
-
-
-  int data = 0;
-  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], count);
-  m_read_pos += count;
-
-
-//  std::cout << " int @" << m_read_pos-count <<  "-" << m_read_pos - 1 << ": "
-//      << data << std::endl;
+  double data = 0.0;
+  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], data_length);
+  m_read_pos += data_length;
 
   return data;
 }
 
-
-int Buffer::Iterator::ReadInteger24()
+int8_t Buffer::Iterator::ReadInteger8()
 {
-  int const count = 3;
-  CheckOverflow(count);
+  uint8_t const data_length = 1;
+  CheckOverflow(data_length);
 
-  int data = 0;
-  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], count);
-  m_read_pos += count;
+  int8_t data = 0;
+  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], data_length);
+  m_read_pos += data_length;
 
   return data;
 }
 
-long Buffer::Iterator::ReadLong()
+int16_t Buffer::Iterator::ReadInteger16()
 {
-  //int const count = sizeof(long);
-  int const count = 8;
-  CheckOverflow(count);
+  uint8_t const data_length = 2;
+  CheckOverflow(data_length);
 
-  int data = 0;
-  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], count);
-  m_read_pos += count;
-
-  //  std::cout << " long @" << m_read_pos-count <<  "-" << m_read_pos - 1
-  //      << ": " << data << std::endl;
+  int16_t data = 0;
+  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], data_length);
+  m_read_pos += data_length;
 
   return data;
 }
 
-short Buffer::Iterator::ReadShort()
+int32_t Buffer::Iterator::ReadInteger32()
 {
-  //int const count = sizeof(short);
-  int const count = 2;
-  CheckOverflow(count);
+  uint8_t const data_length = 4;
+  CheckOverflow(data_length);
 
-  short data = 0;
-  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], count);
-  m_read_pos += count;
+  int32_t data = 0;
+  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], data_length);
+  m_read_pos += data_length;
 
-//  std::cout << " short @" << m_read_pos-count <<  "-" << m_read_pos - 1
-//  << ": " << data << std::endl;
+  return data;
+}
+
+int64_t Buffer::Iterator::ReadInteger64()
+{
+  uint8_t const data_length = 8;
+  CheckOverflow(data_length);
+
+  int64_t data = 0;
+  memcpy(&data, &m_outer_buffer->m_bytes[m_read_pos], data_length);
+  m_read_pos += data_length;
 
   return data;
 }
 
 std::string Buffer::Iterator::ReadString()
 {
-  int count = (int)ReadByte();
-  CheckOverflow(count);
+  int16_t data_length = ReadInteger16();
+  CheckOverflow(data_length);
 
-  int const start_pos = m_read_pos;
-  int const end_pos = start_pos + count - 1;
+  uint32_t const start_pos = m_read_pos;
+  uint32_t const end_pos = start_pos + data_length - 1;
 
   std::stringstream string_stream;
-  for (int i = start_pos; end_pos >= i; ++i) {
+  for (uint32_t i = start_pos; end_pos >= i; ++i) {
     string_stream << m_outer_buffer->m_bytes[i];
   }
   std::string data = string_stream.str();
 
-  m_read_pos += count;
-
-//  std::cout << " string @" << start_pos << "-" << end_pos << ": " << data << 
-//      std::endl;
+  m_read_pos += data_length;
 
   return data;
 }
 void Buffer::Iterator::Reset()
 {
   m_read_pos = 0;
-
 }
 
 Buffer::Buffer():
-    m_bytes() 
+    m_bytes()
 {
 }
 
-Buffer::Buffer(std::vector<unsigned char> const &a_bytes):
+Buffer::Buffer(std::vector<uint8_t> const &a_bytes):
     m_bytes(a_bytes)
 {
 }
@@ -216,130 +182,139 @@ Buffer::~Buffer()
 {
 }
 
-void Buffer::Append(std::vector<unsigned char> const &a_bytes)
+void Buffer::Append(std::vector<uint8_t> const &a_data)
 {
-    m_bytes.insert(m_bytes.end(), a_bytes.begin(), a_bytes.end());
+  m_bytes.insert(m_bytes.end(), a_data.begin(), a_data.end());
 }
 
-void Buffer::AppendBoolean(bool a_bool)
+void Buffer::AppendBoolean(bool a_data)
 {
-  AppendByte(static_cast<unsigned char>(a_bool));
+  AppendByte(static_cast<uint8_t>(a_data));
 }
 
-void Buffer::AppendByte(unsigned char a_byte)
+void Buffer::AppendByte(uint8_t a_data)
 {
-  std::vector<unsigned char> append(1);
-  append[0] = a_byte;
+  std::vector<uint8_t> append(1);
+  append[0] = a_data;
 
   Append(append);
 }
 
-void Buffer::AppendBytes(std::vector<unsigned char> const &a_bytes)
+void Buffer::AppendBytes(std::vector<uint8_t> const &a_data)
 {
-  long len = a_bytes.size();
-  AppendLong(len);
+  uint16_t data_length = a_data.size();
+  AppendInteger16(data_length);
 
-  Append(a_bytes);
+  Append(a_data);
 }
 
-void Buffer::AppendBytesRaw(std::vector<unsigned char> const &a_bytes)
+void Buffer::AppendBytesRaw(std::vector<uint8_t> const &a_data)
 {
-  Append(a_bytes);
+  Append(a_data);
 }
 
-void Buffer::AppendDouble(double a_double)
+void Buffer::AppendFloat32(float a_data)
 {
-  //int count = sizeof(double);
-  int count = 8;
+  uint8_t const data_length = 4;
 
-  std::vector<unsigned char> append(count);
-  memcpy(&append[0], &a_double, count);
+  std::vector<uint8_t> append(data_length);
+  memcpy(&append[0], &a_data, data_length);
 
   Append(append);
 }
 
-void Buffer::AppendFloat(float a_float)
+void Buffer::AppendFloat64(double a_data)
 {
-  //int count = sizeof(dloat);
-  int count = 4;
+  uint8_t const data_length = 8;
 
-  std::vector<unsigned char> append(count);
-  memcpy(&append[0], &a_float, count);
+  std::vector<uint8_t> append(data_length);
+  memcpy(&append[0], &a_data, data_length);
 
   Append(append);
 }
 
-void Buffer::AppendInteger(int a_integer)
+void Buffer::AppendInteger8(int8_t a_data)
 {
-  //int count = sizeof(int);
-  int count = 4;
+  uint8_t const data_length = 1;
 
-  std::vector<unsigned char> append(count);
-  memcpy(&append[0], &a_integer, count);
+  std::vector<uint8_t> append(data_length);
+  memcpy(&append[0], &a_data, data_length);
 
   Append(append);
 }
 
-void Buffer::AppendLong(long a_long)
+void Buffer::AppendInteger16(int16_t a_data)
 {
-  //int count = sizeof(long);
-  int count = 8;
+  uint8_t const data_length = 2;
 
-  std::vector<unsigned char> append(count);
-  memcpy(&append[0], &a_long, count);
+  std::vector<uint8_t> append(data_length);
+  memcpy(&append[0], &a_data, data_length);
 
   Append(append);
 }
 
-void Buffer::AppendShort(short a_short)
+void Buffer::AppendInteger32(int32_t a_data)
 {
-  //int count = sizeof(short);
-  int count = 2;
+  uint8_t const data_length = 4;
 
-  std::vector<unsigned char> append(count);
-  memcpy(&append[0], &a_short, count);
+  std::vector<uint8_t> append(data_length);
+  memcpy(&append[0], &a_data, data_length);
 
   Append(append);
 }
 
-void Buffer::AppendString(std::string const &a_string)
+void Buffer::AppendInteger64(int64_t a_data)
 {
-  int len = a_string.length();
-  if (len > 255) {
-    throw std::runtime_error("String is too long (> 255).");
-  }
-  AppendByte((unsigned char)len);
+  uint8_t const data_length = 8;
 
-  std::vector<unsigned char> append(a_string.begin(), a_string.end());
+  std::vector<uint8_t> append(data_length);
+  memcpy(&append[0], &a_data, data_length);
+
   Append(append);
 }
 
-void Buffer::AppendStringRaw(std::string const &a_string)
+void Buffer::AppendString(std::string const &a_data)
 {
-  std::vector<unsigned char> append(a_string.begin(), a_string.end());
+  uint16_t data_length = a_data.length();
+  AppendInteger16(data_length);
+
+  AppendStringRaw(a_data);
+}
+
+void Buffer::AppendStringRaw(std::string const &a_data)
+{
+  std::vector<uint8_t> append(a_data.begin(), a_data.end());
   Append(append);
 }
 
-std::vector<unsigned char> const &Buffer::GetBytes() const
+std::vector<uint8_t> const &Buffer::GetData() const
 {
   return m_bytes;
 }
 
+std::string const Buffer::GetDataString() const
+{
+  std::stringstream string_stream;
+  for (uint32_t i = 0; i < m_bytes.size(); ++i) {
+    string_stream << m_bytes[i];
+  }
+  std::string data = string_stream.str();
+
+  return data;
+}
+
 std::shared_ptr<Buffer::Iterator> Buffer::GetIterator() const
 {
-  std::shared_ptr<Buffer::Iterator> iterator(new Buffer::Iterator(this));
+  std::shared_ptr<Buffer::Iterator> iterator(
+      new Buffer::Iterator(this));
   return iterator; 
 }
 
-int Buffer::GetSize() const
+uint32_t Buffer::GetSize() const
 {
   return m_bytes.size();
 }
 
-unsigned char Buffer::ReadByte(int a_index) const
-{
-  return m_bytes[a_index];
-}
 
 }
 }
