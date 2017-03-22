@@ -24,6 +24,8 @@
 #include <opendavinci/odcore/base/KeyValueConfiguration.h>
 #include <opendavinci/odcore/data/Container.h>
 
+#include <opendavinci/odcore/strings/StringToolbox.h>
+
 #include <odvdminiature/GeneratedHeaders_ODVDMiniature.h>
 
 #include "Lps.h"
@@ -55,22 +57,51 @@ void Lps::setUp()
     kv.getValue<float>("proxy-miniature-lps.searchMargin");
   m_frameId = kv.getValue<uint16_t>("proxy-miniature-lps.frameId");
 
-   
-  float x0 = kv.getValue<float>("proxy-miniature-lps.origoMarkerX");
-  float y0 = kv.getValue<float>("proxy-miniature-lps.origoMarkerY");
-  float z0 = kv.getValue<float>("proxy-miniature-lps.origoMarkerZ");
-  opendlv::model::Cartesian3 origoMarker(x0, y0, z0);
+  std::string const origoMarkerString = 
+      kv.getValue<std::string>("proxy-miniature-lps.origoMarker");
+  std::vector<std::string> const origoMarkerStringVector = 
+      odcore::strings::StringToolbox::split(origoMarkerString, ',');
+  if (origoMarkerStringVector.size() != 3) {
+    std::cerr << "[" << getName() 
+        << "] Keyvalue configuration of origoMarker does not contain 3 values" 
+        << std::endl; 
+  }
+  opendlv::model::Cartesian3 origoMarker(
+      std::stof(origoMarkerStringVector.at(0)), 
+      std::stof(origoMarkerStringVector.at(1)), 
+      std::stof(origoMarkerStringVector.at(2)));
+  
+  std::string const forwardMarkerString = 
+      kv.getValue<std::string>("proxy-miniature-lps.forwardMarker");
+  std::vector<std::string> const forwardMarkerStringVector = 
+      odcore::strings::StringToolbox::split(forwardMarkerString, ',');
+  if (forwardMarkerStringVector.size() != 3) {
+    std::cerr << "[" << getName() 
+        << "] Keyvalue configuration of forwardMarker does not contain 3 values" 
+        << std::endl; 
+  }
+  opendlv::model::Cartesian3 forwardMarker(
+      std::stof(forwardMarkerStringVector.at(0)), 
+      std::stof(forwardMarkerStringVector.at(1)), 
+      std::stof(forwardMarkerStringVector.at(2)));
+  
 
-  float x1 = kv.getValue<float>("proxy-miniature-lps.forwardMarkerX");
-  float y1 = kv.getValue<float>("proxy-miniature-lps.forwardMarkerY");
-  float z1 = kv.getValue<float>("proxy-miniature-lps.forwardMarkerZ");
-  opendlv::model::Cartesian3 forwardMarker(x1, y1, z1);
-
-  float x2 = kv.getValue<float>("proxy-miniature-lps.leftwardMarkerX");
-  float y2 = kv.getValue<float>("proxy-miniature-lps.leftwardMarkerY");
-  float z2 = kv.getValue<float>("proxy-miniature-lps.leftwardMarkerZ");
-  opendlv::model::Cartesian3 leftwardMarker(x2, y2, z2);
-
+  std::string const leftwardMarkerString = 
+      kv.getValue<std::string>("proxy-miniature-lps.leftwardMarker");
+  std::vector<std::string> const leftwardMarkerStringVector = 
+      odcore::strings::StringToolbox::split(leftwardMarkerString, ',');
+  if (leftwardMarkerStringVector.size() != 3) {
+    std::cerr << "[" << getName() 
+        << "] Keyvalue configuration of leftwardMarker does not contain 3 "
+        << "values" 
+        << std::endl; 
+  }
+  opendlv::model::Cartesian3 leftwardMarker(
+      std::stof(leftwardMarkerStringVector.at(0)), 
+      std::stof(leftwardMarkerStringVector.at(1)), 
+      std::stof(leftwardMarkerStringVector.at(2)));
+  
+  
   std::vector<opendlv::model::Cartesian3> needleMarkers;
   needleMarkers.push_back(origoMarker);
   needleMarkers.push_back(forwardMarker);
@@ -89,7 +120,8 @@ void Lps::nextContainer(odcore::data::Container &a_container)
     opendlv::proxy::QtmFrame qtmFrame = 
         a_container.getData<opendlv::proxy::QtmFrame>();
     
-    std::vector<opendlv::model::Cartesian3> markers = qtmFrame.getListOfMarkers();
+    std::vector<opendlv::model::Cartesian3> markers = 
+        qtmFrame.getListOfMarkers();
     Search(markers);
   }
 }

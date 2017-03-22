@@ -126,9 +126,9 @@ void QualisysPacketDecoder::nextPacket(odcore::io::Packet const &a_packet)
   std::vector<opendlv::model::Cartesian3> markers;
   for (int32_t j = 0; j < markerCount; j++)
   {
-    float const x = it->ReadFloat32(); // 1000.0f;
-    float const y = it->ReadFloat32(); // 1000.0f;
-    float const z = it->ReadFloat32(); // 1000.0f;
+    float const x = it->ReadFloat32()/1e3f;
+    float const y = it->ReadFloat32()/1e3f;
+    float const z = it->ReadFloat32()/1e3f;
     int32_t const id = it->ReadInteger32();
     opendlv::model::Cartesian3 marker(x,y,z);
     if (m_debug) {
