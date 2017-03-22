@@ -23,13 +23,16 @@
 #include <string>
 
 #include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+// #include "opendlv/data/environment/EgoState.h"
+
 
 namespace opendlv {
 namespace sim {
 namespace miniature {
 
 
-class Differential : public odcore::base::module::TimeTriggeredConferenceClientModule {
+class Differential 
+  : public odcore::base::module::TimeTriggeredConferenceClientModule {
    public:
     Differential(int32_t const &, char **);
     Differential(Differential const &) = delete;
@@ -43,6 +46,7 @@ class Differential : public odcore::base::module::TimeTriggeredConferenceClientM
     odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
 
     bool m_debug;
+    // opendlv::data::environment::EgoState m_egoState;
 };
 
 }

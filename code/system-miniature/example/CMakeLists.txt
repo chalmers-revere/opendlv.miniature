@@ -70,7 +70,7 @@ find_package(odcantools REQUIRED)
 ###############################################################################
 # Set header files from ODCANTools.
 INCLUDE_DIRECTORIES (SYSTEM ${ODCANTOOLS_INCLUDE_DIRS})
-# Set header files from miniature.
+# Set header files from ODVDMiniature.
 INCLUDE_DIRECTORIES (SYSTEM ${ODVDMINIATURE_INCLUDE_DIRS})
 # Set header files from AutomotiveData.
 INCLUDE_DIRECTORIES (SYSTEM ${AUTOMOTIVEDATA_INCLUDE_DIRS})

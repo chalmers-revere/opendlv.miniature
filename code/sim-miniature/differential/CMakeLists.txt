@@ -1,5 +1,4 @@
-# sim-fh16 - Interface to FH16 truck.
-# Copyright (C) 2016 Christian Berger
+# Copyright (C) 2016 Chalmers Revere
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,7 +20,7 @@ PROJECT (opendlv-sim-miniature-differential)
 
 ###########################################################################
 # Set the search path for .cmake files.
-SET (CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../../cmake.Modules" ${CMAKE_MODULE_PATH})
+SET (CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../cmake.Modules" ${CMAKE_MODULE_PATH})
 
 # Add a local CMake module search path dependent on the desired installation destination.
 # Thus, artifacts from the complete source build can be given precendence over any installed versions.
@@ -55,8 +54,8 @@ set(CMAKE_MODULE_PATH "${ODVDOPENDLVDATA_DIR}/share/cmake-${CMAKE_MAJOR_VERSION}
 find_package(ODVDOpenDLVData REQUIRED)
 
 ###########################################################################
-# Find ODVDRhino.
-# find_package(ODVDRhino REQUIRED)
+# Find ODVDMiniature.
+find_package(ODVDMiniature REQUIRED)
 
 ###########################################################################
 # Find AutomotiveData.
@@ -69,31 +68,29 @@ set(ODCANTOOLS_DIR "${OPENDAVINCI_DIR}")
 find_package(odcantools REQUIRED)
 
 ###############################################################################
+# Set header files from ODCANTools.
+INCLUDE_DIRECTORIES (SYSTEM ${ODCANTOOLS_INCLUDE_DIRS})
+# Set header files from ODVDMiniature.
+INCLUDE_DIRECTORIES (SYSTEM ${ODVDMINIATURE_INCLUDE_DIRS})
+# Set header files from AutomotiveData.
+INCLUDE_DIRECTORIES (SYSTEM ${AUTOMOTIVEDATA_INCLUDE_DIRS})
+# Set header files from ODVDVehicle.
+INCLUDE_DIRECTORIES (SYSTEM ${ODVDVEHICLE_INCLUDE_DIRS})
+# Set header files from ODVDOpenDLVData.
+INCLUDE_DIRECTORIES (SYSTEM ${ODVDOPENDLVDATA_INCLUDE_DIRS})
 # Set header files from OpenDaVINCI.
 INCLUDE_DIRECTORIES (SYSTEM ${OPENDAVINCI_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES (SYSTEM ${ODCANTOOLS_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES (SYSTEM ${AUTOMOTIVEDATA_INCLUDE_DIRS})
-
-# Set header files from OpenDLV.core.
-INCLUDE_DIRECTORIES (SYSTEM ${ODVDVEHICLE_INCLUDE_DIRS})
-
-# Set header files from OpenDLV.
-INCLUDE_DIRECTORIES (SYSTEM ${ODVDOPENDLVDATA_INCLUDE_DIRS})
-
-# Set header files from OpenDLV.Rhino.
-# INCLUDE_DIRECTORIES (SYSTEM ${ODVDRHINO_INCLUDE_DIRS})
-
 # Set include directory.
 INCLUDE_DIRECTORIES(include)
 
 # Set libraries to link against.
 set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
-  ${ODCANTOOLS_LIBRARIES}            
-  ${AUTOMOTIVEDATA_LIBRARIES}
-  ${ODVDVEHICLE_LIBRARIES}
-  ${ODVDOPENDLVDATA_LIBRARIES}
-  # ${ODVDRHINO_LIBRARIES}
-  )
+              ${ODVDMINIATURE_LIBRARIES}
+              ${ODVDVEHICLE_LIBRARIES}
+              ${ODVDOPENDLVDATA_LIBRARIES}
+              ${ODVDMINIATURE_LIBRARIES}
+              ${AUTOMOTIVEDATA_LIBRARIES}
+              ${ODCANTOOLS_LIBRARIES})
 
 ###############################################################################
 # Build this project.

@@ -23,6 +23,8 @@
 #include <opendavinci/odcore/data/Container.h>
 #include <opendavinci/odcore/data/TimeStamp.h>
 
+#include <odvdminiature/GeneratedHeaders_ODVDMiniature.h>
+
 #include "Differential.h"
 
 namespace opendlv {
@@ -33,6 +35,7 @@ Differential::Differential(const int &argc, char **argv)
   : TimeTriggeredConferenceClientModule(
       argc, argv, "sim-miniature-differential")
   , m_debug()
+  // , m_egoState()
 {
 }
 
@@ -40,9 +43,26 @@ Differential::~Differential()
 {
 }
 
-void Differential::nextContainer(odcore::data::Container &a_container)
+void Differential::nextContainer(odcore::data::Container &a_c)
 {
-  (void) a_container;
+  int32_t dataType = a_c.getDataType();
+
+  if (dataType == opendlv::proxy::AnalogReading::ID()) {
+    opendlv::proxy::AnalogReading reading = 
+        a_c.getData<opendlv::proxy::AnalogReading>();
+    std::cout << "[" << getName() << "] Received an AnalogReading: " 
+        << reading.toString() << "." << std::endl;
+  } else if (dataType == opendlv::proxy::ToggleReading::ID()) {
+    opendlv::proxy::ToggleReading reading = 
+        a_c.getData<opendlv::proxy::ToggleReading>();
+    std::cout << "[" << getName() << "] Received a ToggleReading: "
+        << reading.toString() << "." << std::endl;
+  } else if (dataType == opendlv::proxy::PwmRequest::ID()) {
+    opendlv::proxy::PwmRequest reading = 
+        a_c.getData<opendlv::proxy::PwmRequest>();
+    std::cout << "[" << getName() << "] Received a PwmRequest: "
+        << reading.toString() << "." << std::endl;
+  }
 }
 
 void Differential::setUp()
