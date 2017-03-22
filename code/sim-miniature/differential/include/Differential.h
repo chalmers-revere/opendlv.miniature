@@ -16,40 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SIM_RHINO_CAN_H
-#define SIM_RHINO_CAN_H
+#ifndef SIM_MINIATURE_DIFFERENTIAL_H
+#define SIM_MINIATURE_DIFFERENTIAL_H
 
 #include <memory>
 #include <string>
 
-#include <opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
 
 namespace opendlv {
 namespace sim {
-namespace rhino {
+namespace miniature {
 
-class Vehicle;
 
-/**
- * Simulated Rhino gateway (vehicle).
- */
-class Can : public odcore::base::module::DataTriggeredConferenceClientModule {
+class Differential : public odcore::base::module::TimeTriggeredConferenceClientModule {
    public:
-    Can(int32_t const &, char **);
-    Can(Can const &) = delete;
-    Can &operator=(Can const &) = delete;
-    virtual ~Can();
+    Differential(int32_t const &, char **);
+    Differential(Differential const &) = delete;
+    Differential &operator=(Differential const &) = delete;
+    virtual ~Differential();
 
    private:
     void nextContainer(odcore::data::Container &);
     virtual void setUp();
     virtual void tearDown();
-    virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
+    odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
 
-    std::unique_ptr<Vehicle> m_vehicle;
-    bool m_enableActuationBrake;
-    bool m_enableActuationSteering;
-    bool m_enableActuationThrottle;
+    bool m_debug;
 };
 
 }

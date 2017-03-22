@@ -17,7 +17,7 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-PROJECT (opendlv-sim-rhino-can)
+PROJECT (opendlv-sim-miniature-differential)
 
 ###########################################################################
 # Set the search path for .cmake files.
@@ -56,7 +56,7 @@ find_package(ODVDOpenDLVData REQUIRED)
 
 ###########################################################################
 # Find ODVDRhino.
-find_package(ODVDRhino REQUIRED)
+# find_package(ODVDRhino REQUIRED)
 
 ###########################################################################
 # Find AutomotiveData.
@@ -81,7 +81,7 @@ INCLUDE_DIRECTORIES (SYSTEM ${ODVDVEHICLE_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES (SYSTEM ${ODVDOPENDLVDATA_INCLUDE_DIRS})
 
 # Set header files from OpenDLV.Rhino.
-INCLUDE_DIRECTORIES (SYSTEM ${ODVDRHINO_INCLUDE_DIRS})
+# INCLUDE_DIRECTORIES (SYSTEM ${ODVDRHINO_INCLUDE_DIRS})
 
 # Set include directory.
 INCLUDE_DIRECTORIES(include)
@@ -92,7 +92,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
   ${AUTOMOTIVEDATA_LIBRARIES}
   ${ODVDVEHICLE_LIBRARIES}
   ${ODVDOPENDLVDATA_LIBRARIES}
-  ${ODVDRHINO_LIBRARIES}
+  # ${ODVDRHINO_LIBRARIES}
   )
 
 ###############################################################################
@@ -136,10 +136,10 @@ ENDIF(CXXTEST_FOUND)
 
 ###############################################################################
 # Install this project.
-INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-sim-rhino)
-INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-sim-rhino)
-INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-sim-rhino)
+INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-sim-miniature)
+INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-sim-miniature)
+INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-sim-miniature)
 
 # Install header files.
-INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-sim-rhino COMPONENT opendlv-sim-rhino)
+INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-sim-miniature COMPONENT opendlv-sim-miniature)
 

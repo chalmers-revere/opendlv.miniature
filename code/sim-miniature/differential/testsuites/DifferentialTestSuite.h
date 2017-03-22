@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef VIRTUAL_RHINO_CAN_TESTSUITE_H
-#define VIRTUAL_RHINO_CAN_TESTSUITE_H
+#ifndef VIRTUAL_MINIATURE_DIFFERENTIAL_TESTSUITE_H
+#define VIRTUAL_MINIATURE_DIFFERENTIAL_TESTSUITE_H
 
 #include "cxxtest/TestSuite.h"
 
 // Include local header files.
-#include "../include/Can.h"
+#include "../include/Differential.h"
 
-class CanTest : public CxxTest::TestSuite {
+class DifferentialTest : public CxxTest::TestSuite {
    public:
     void setUp() {}
 

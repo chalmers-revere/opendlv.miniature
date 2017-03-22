@@ -18,176 +18,54 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 
+#include <opendavinci/odcore/base/KeyValueConfiguration.h>
 #include <opendavinci/odcore/data/Container.h>
 #include <opendavinci/odcore/data/TimeStamp.h>
 
-#include <odvdrhino/GeneratedHeaders_ODVDRhino.h>
-#include <odvdvehicle/GeneratedHeaders_ODVDVehicle.h>
-
-#include "Can.h"
-#include "Vehicle.h"
+#include "Differential.h"
 
 namespace opendlv {
 namespace sim {
-namespace rhino {
+namespace miniature {
 
-Can::Can(const int &argc, char **argv)
-  : DataTriggeredConferenceClientModule(argc, argv, "sim-miniature-differential")
-  , m_vehicle(new Vehicle)
-  , m_enableActuationBrake(false)
-  , m_enableActuationSteering(false)
-  , m_enableActuationThrottle(false)
+Differential::Differential(const int &argc, char **argv)
+  : TimeTriggeredConferenceClientModule(
+      argc, argv, "sim-miniature-differential")
+  , m_debug()
 {
 }
 
-Can::~Can()
+Differential::~Differential()
 {
 }
 
-void Can::nextContainer(odcore::data::Container &a_container)
+void Differential::nextContainer(odcore::data::Container &a_container)
 {
-  if (a_container.getDataType() == opendlv::proxy::ActuationRequest::ID()) {
-    auto actuationRequest = 
-      a_container.getData<opendlv::proxy::ActuationRequest>();
-
-    bool const isValid = actuationRequest.getIsValid();
-
-    float const acceleration = actuationRequest.getAcceleration();
-    if (acceleration < 0.0f) {
-      bool brakeEnabled = false;
-      if (m_enableActuationBrake && isValid) {
-        brakeEnabled = true;
-      }
-
-      opendlv::proxy::rhino::BrakeRequest brakeRequest;
-      brakeRequest.setEnableRequest(brakeEnabled);
-
-      float const max_deceleration = 2.0f;
-      if (acceleration < -max_deceleration) {
-        if (brakeEnabled) {
-          std::cout << "WARNING: Deceleration was limited to " 
-            << max_deceleration << ". This should never happen, and "
-            << "may be a safety violating behaviour!" 
-            << std::endl;
-        }
-        brakeRequest.setDeceleration(-max_deceleration);
-      } else {
-        brakeRequest.setDeceleration(acceleration);
-      }
-
-      m_vehicle->SetBrakeRequest(brakeRequest);
-    } else {
-      bool throttleEnabled = false;
-      if (m_enableActuationThrottle && isValid) {
-        throttleEnabled = true;
-      }
-
-      opendlv::proxy::rhino::AccelerationRequest accelerationRequest;
-      accelerationRequest.setEnableRequest(throttleEnabled);
-      accelerationRequest.setAccelerationPedalPosition(acceleration);
-
-      m_vehicle->SetAccelerationRequest(accelerationRequest);
-    }
-
-    bool steeringEnabled = false;
-    if (m_enableActuationSteering && isValid) {
-      steeringEnabled = true;
-    }
-
-    float const steering = actuationRequest.getSteering();
-    opendlv::proxy::rhino::SteeringRequest steeringRequest;
-    steeringRequest.setEnableRequest(steeringEnabled);
-    steeringRequest.setRoadWheelAngle(steering);
-
-    // Must be 33.535 to disable deltatorque.
-    steeringRequest.setDeltaTorque(33.535);
-
-    m_vehicle->SetSteeringRequest(steeringRequest);
-  }
+  (void) a_container;
 }
 
-void Can::setUp()
+void Differential::setUp()
 {
-  bool valueFound = false;
+  odcore::base::KeyValueConfiguration kv = getKeyValueConfiguration();
 
-  m_enableActuationBrake =
-    getKeyValueConfiguration().getOptionalValue<bool>(
-        "sim-rhino-can.enableActuationBrake", valueFound);
+  bool valueFound;
+  m_debug = kv.getOptionalValue<bool>("sim-miniature-differential.debug", 
+      valueFound);
   if (!valueFound) {
-    m_enableActuationBrake = false;
-  }
-  if (!m_enableActuationBrake) {
-    std::cout << "The brakes are not enabled for control." << std::endl;
-  }
-
-  m_enableActuationSteering = 
-    getKeyValueConfiguration().getOptionalValue<bool>(
-        "sim-rhino-can.enableActuationSteering", valueFound);
-  if (!valueFound) {
-    m_enableActuationSteering = false;
-  }
-  if (!m_enableActuationSteering) {
-    std::cout << "The steering is not enabled for control." << std::endl;
-  }
-
-  m_enableActuationThrottle = 
-    getKeyValueConfiguration().getOptionalValue<bool>(
-        "sim-rhino-can.enableActuationThrottle", valueFound);
-  if (!valueFound) {
-    m_enableActuationThrottle = false;
-  }
-  if (!m_enableActuationThrottle) {
-    std::cout << "The throttle is not enabled for control." << std::endl;
+    m_debug = false;
   }
 }
 
-void Can::tearDown()
+void Differential::tearDown()
 {
 }
 
-odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Can::body()
+odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Differential::body()
 {
-  odcore::data::TimeStamp lastUpdate;
   while (getModuleStateAndWaitForRemainingTimeInTimeslice() == 
       odcore::data::dmcp::ModuleStateMessage::RUNNING) {
 
-    odcore::data::TimeStamp now;
-    float deltaTime = static_cast<float>((now.getMicroseconds() - lastUpdate.getMicroseconds()) / 1000000.0);
-    lastUpdate = now;
-
-    std::cout << "Delta time: " << deltaTime << std::endl; // Remove later.
-
-    m_vehicle->Update(deltaTime);
-
-    auto manualControl = m_vehicle->GetManualControl();
-    odcore::data::Container manualControlContainer(manualControl);
-    getConference().send(manualControlContainer);
-
-    auto axles = m_vehicle->GetAxles();
-    odcore::data::Container axlesContainer(axles);
-    getConference().send(axlesContainer);
-    
-    auto propulsion = m_vehicle->GetPropulsion();
-    odcore::data::Container propulsionContainer(propulsion);
-    getConference().send(propulsionContainer);
-    
-    auto vehicleState = m_vehicle->GetVehicleState();
-    odcore::data::Container vehicleStateContainer(vehicleState);
-    getConference().send(vehicleStateContainer);
-    
-    auto wheels = m_vehicle->GetWheels();
-    odcore::data::Container wheelsContainer(wheels);
-    getConference().send(wheelsContainer);
-    
-    auto steering = m_vehicle->GetSteering();
-    odcore::data::Container steeringContainer(steering);
-    getConference().send(steeringContainer);
-    
-    auto driveline = m_vehicle->GetDriveline();
-    odcore::data::Container drivelineContainer(driveline);
-    getConference().send(drivelineContainer);
   }
 
   return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;

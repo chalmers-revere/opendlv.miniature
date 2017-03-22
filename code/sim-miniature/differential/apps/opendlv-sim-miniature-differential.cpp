@@ -1,5 +1,4 @@
 /**
- * sim-rhino-can - Simulated Rhino CAN gateway.
  * Copyright (C) 2017 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
@@ -17,9 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Can.h"
+#include "Differential.h"
 
 int32_t main(int32_t argc, char **argv) {
-    opendlv::sim::rhino::Can can(argc, argv);
-    return can.runModule();
+    opendlv::sim::miniature::Differential differential(argc, argv);
+    return differential.runModule();
 }

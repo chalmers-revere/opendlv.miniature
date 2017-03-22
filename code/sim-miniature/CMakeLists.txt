@@ -17,7 +17,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project(opendlv-sim-rhino)
+project(opendlv-sim-miniature)
 
 ###########################################################################
 # Set the search path for .cmake files.
@@ -47,7 +47,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES})
 
 ###########################################################################
 # Add subfolders with sources.
-add_subdirectory(can)
+add_subdirectory(differential)
 
 ###########################################################################
 # Enable CPack to create .deb and .rpm.
