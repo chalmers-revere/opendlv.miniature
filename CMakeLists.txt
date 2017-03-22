@@ -62,10 +62,6 @@ include(FindJava REQUIRED)
 include(FindodDataStructureGenerator REQUIRED)
 
 ###########################################################################
-# Find odCANDataStructureGenerator.
-include(FindodCANDataStructureGenerator REQUIRED)
-
-###########################################################################
 # Find OpenDaVINCI.
 find_package(OpenDaVINCI REQUIRED)
 

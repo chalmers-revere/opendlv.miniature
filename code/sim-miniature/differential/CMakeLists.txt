@@ -62,14 +62,8 @@ find_package(ODVDMiniature REQUIRED)
 set(AUTOMOTIVEDATA_DIR "${OPENDAVINCI_DIR}")
 find_package(AutomotiveData REQUIRED)
 
-###########################################################################
-# Find odcantools.
-set(ODCANTOOLS_DIR "${OPENDAVINCI_DIR}")
-find_package(odcantools REQUIRED)
 
 ###############################################################################
-# Set header files from ODCANTools.
-INCLUDE_DIRECTORIES (SYSTEM ${ODCANTOOLS_INCLUDE_DIRS})
 # Set header files from ODVDMiniature.
 INCLUDE_DIRECTORIES (SYSTEM ${ODVDMINIATURE_INCLUDE_DIRS})
 # Set header files from AutomotiveData.
@@ -89,8 +83,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
               ${ODVDVEHICLE_LIBRARIES}
               ${ODVDOPENDLVDATA_LIBRARIES}
               ${ODVDMINIATURE_LIBRARIES}
-              ${AUTOMOTIVEDATA_LIBRARIES}
-              ${ODCANTOOLS_LIBRARIES})
+              ${AUTOMOTIVEDATA_LIBRARIES})
 
 ###############################################################################
 # Build this project.
