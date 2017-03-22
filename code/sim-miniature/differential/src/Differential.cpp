@@ -23,6 +23,8 @@
 #include <opendavinci/odcore/data/Container.h>
 #include <opendavinci/odcore/data/TimeStamp.h>
 
+#include <opendlv/data/environment/EgoState.h>
+
 #include <odvdminiature/GeneratedHeaders_ODVDMiniature.h>
 
 #include "Differential.h"

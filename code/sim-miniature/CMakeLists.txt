@@ -38,12 +38,21 @@ include(CheckCxxTestEnvironment)
 find_package(OpenDaVINCI REQUIRED)
 
 ###########################################################################
+# Find OpenDLV (from OpenDaVINCI).
+set(OPENDLV_DIR "${OPENDAVINCI_DIR}")
+find_package(OpenDLV REQUIRED)
+
+
+###########################################################################
 # Set common include directories.
 include_directories(SYSTEM ${OPENDAVINCI_INCLUDE_DIRS})
+include_directories(SYSTEM ${OPENDLV_INCLUDE_DIRS})
+
 
 ###########################################################################
 # Set libraries to link against.
-set(LIBRARIES ${OPENDAVINCI_LIBRARIES})
+set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
+  ${OPENDLV_LIBRARIES})
 
 ###########################################################################
 # Add subfolders with sources.
