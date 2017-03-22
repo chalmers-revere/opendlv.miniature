@@ -91,5 +91,5 @@ proxy-miniature-pwm.dutyCyclesNs = 1500000,1500000
 # CONFIGURATION FOR SYSTEM
 #
 
-system-miniature-example.gpio-pins = 31
+system-miniature-example.digital-pins = 31
 system-miniature-example.pwm-pins = 0,1
