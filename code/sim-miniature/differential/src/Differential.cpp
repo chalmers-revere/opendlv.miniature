@@ -23,7 +23,7 @@
 #include <opendavinci/odcore/data/Container.h>
 #include <opendavinci/odcore/data/TimeStamp.h>
 
-#include <opendlv/data/environment/EgoState.h>
+#include <opendlv/data/environment/Point3.h>
 
 #include <odvdminiature/GeneratedHeaders_ODVDMiniature.h>
 
@@ -36,8 +36,11 @@ namespace miniature {
 Differential::Differential(const int &argc, char **argv)
   : TimeTriggeredConferenceClientModule(
       argc, argv, "sim-miniature-differential")
+  , m_currentState()
   , m_debug()
-  // , m_egoState()
+  , m_deltaTime()
+  , m_leftWheelSpeed(0.0)
+  , m_rightWheelSpeed(0.0)
 {
 }
 
@@ -48,22 +51,37 @@ Differential::~Differential()
 void Differential::nextContainer(odcore::data::Container &a_c)
 {
   int32_t dataType = a_c.getDataType();
-
-  if (dataType == opendlv::proxy::AnalogReading::ID()) {
-    opendlv::proxy::AnalogReading reading = 
+  if (dataType == automotive::miniature::SensorBoardData::ID()) {
+    automotive::miniature::SensorBoardData sensorBoardData = 
         a_c.getData<opendlv::proxy::AnalogReading>();
-    std::cout << "[" << getName() << "] Received an AnalogReading: " 
-        << reading.toString() << "." << std::endl;
+    if (m_debug) {
+      std::cout << "[" << getName() << "] Received an SensorBoardData: " 
+          << sensorBoardData.toString() << "." << std::endl;
+    }
+    ConvertSensorToAnalogReading(sensorBoardData);
   } else if (dataType == opendlv::proxy::ToggleReading::ID()) {
     opendlv::proxy::ToggleReading reading = 
         a_c.getData<opendlv::proxy::ToggleReading>();
-    std::cout << "[" << getName() << "] Received a ToggleReading: "
-        << reading.toString() << "." << std::endl;
+    if (m_debug) {
+      std::cout << "[" << getName() << "] Received a ToggleReading: "
+          << reading.toString() << "." << std::endl;
+    }
   } else if (dataType == opendlv::proxy::PwmRequest::ID()) {
-    opendlv::proxy::PwmRequest reading = 
+    opendlv::proxy::PwmRequest request = 
         a_c.getData<opendlv::proxy::PwmRequest>();
-    std::cout << "[" << getName() << "] Received a PwmRequest: "
-        << reading.toString() << "." << std::endl;
+    if (m_debug) {
+      std::cout << "[" << getName() << "] Received a PwmRequest: "
+          << request.toString() << "." << std::endl;
+    }
+    uint16_t pin = request.getPin();
+    uint32_t dutyCycleNs = request.getDutyCycleNs();
+    if (pin == 0 || pin == 1) {
+      m_pwmActuators.at(pin) = dutyCycleNs;
+    } else {
+      std::cout << "[" << getName() << "] Received a PwmRequest with unsupported pin number: "
+          << pin << "." << std::endl;
+    }
+
   }
 }
 
@@ -77,6 +95,8 @@ void Differential::setUp()
   if (!valueFound) {
     m_debug = false;
   }
+
+  m_deltaTime = 1 / getFrequency();
 }
 
 void Differential::tearDown()
@@ -87,11 +107,40 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Differential::body()
 {
   while (getModuleStateAndWaitForRemainingTimeInTimeslice() == 
       odcore::data::dmcp::ModuleStateMessage::RUNNING) {
+    // // m_currentState = GetCurrentState();
+    // odcore::data::Container c(m_currentState);
+    // getConference().send(c);
 
   }
 
   return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;
 }
+
+void Differential::ConvertSensorToAnalogReading(
+  automotive::miniature::SensorBoardData const &a_sensorBoardData)
+{
+  std::map<uint32_t, double> mapOfDistances = 
+      a_sensorBoardData.getMapOfDistances();
+  
+  for (auto distanceReading : mapOfDistances) {
+    uint32_t sensorId = distanceReading.first;
+    double distance = distanceReading.second;
+
+    opendlv::proxy::AnalogReading analogReading(sensorId, voltage);
+    odcore::data::Container c(analogReading);
+    send(c);
+  }
+}
+
+// opendlv::data::environment::EgoState Differential::GetCurrentState()
+// {
+//   // opendlv::data::environment::Point3 previousPosition = m_currentState.getPosition();
+//   // opendlv::data::environment::Point3 previousRotation = m_currentState.getRotation();
+//   // opendlv::data::environment::Point3 previousVelocity = m_currentState.getVelocity();
+//   // opendlv::data::environment::Point3 previousAcceleration = m_currentState.getAcceleration();
+
+//   return m_currentState;
+// }
 
 }
 }

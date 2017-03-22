@@ -21,15 +21,16 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
-// #include "opendlv/data/environment/EgoState.h"
 
+#include <automotivedata/GeneratedHeaders_AutomotiveData.h>
+#include <opendlv/data/environment/EgoState.h>
 
 namespace opendlv {
 namespace sim {
 namespace miniature {
-
 
 class Differential 
   : public odcore::base::module::TimeTriggeredConferenceClientModule {
@@ -44,9 +45,14 @@ class Differential
     virtual void setUp();
     virtual void tearDown();
     odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
+    void ConvertSensorToAnalogReading(
+      automotive::miniature::SensorBoardData const &);
 
+    opendlv::data::environment::EgoState m_currentState;
     bool m_debug;
-    // opendlv::data::environment::EgoState m_egoState;
+    double m_deltaTime;
+    double m_leftWheelSpeed;
+    double m_rightWheelSpeed;
 };
 
 }
