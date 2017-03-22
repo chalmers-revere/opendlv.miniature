@@ -1,6 +1,5 @@
 /**
- * proxy-miniature-pwm - Interface to PRU to generate PWM singlas at miniature vehicle.
- * Copyright (C) 2016 Revere
+ * Copyright (C) 2016 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,9 +16,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Pwm.h"
+#include <iostream>
 
-int32_t main(int32_t argc, char **argv) {
-    opendlv::proxy::miniature::Pwm pwm(argc, argv);
-    return pwm.runModule();
+#include <prussdrv.h>
+#include <pruss_intc_mapping.h>
+
+#include "pru.h"
+
+namespace opendlv {
+namespace proxy {
+namespace miniature {
+
+uint32_t *Pru::m_sharedMameory = nullptr;
+
+Pru::Pru(uint8_t a_pruId):
+  m_pruId(a_pruId)
+{
+  prussdrv_init();
+
+  uint32_t res = prussdrv_open(PRU_EVTOUT_0);
+  if (res) {
+    std::cerr << "ERROR: Could not open PRU_EVTOUT_0" << std::endl;
+  }
+
+  tpruss_intc_initdata pruss_intc_initdata = PRUSS_INTC_INITDATA;
+  prussdrv_pruintc_init(&pruss_intc_initdata);
+
+  if (!m_sharedMemory) {
+    static void *memPtr;
+    prussdrv_map_prumem(PRUSS0_SHARED_DATARAM, &memPtr);
+    m_sharedMemory = (uint32_t *) memPtr;
+  }
+}
+
+Pru::~Pru() 
+{
+}
+
+}
+}
 }

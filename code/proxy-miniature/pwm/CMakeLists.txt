@@ -48,6 +48,7 @@ FIND_PACKAGE (OpenDaVINCI REQUIRED)
 set(CMAKE_MODULE_PATH "${ODVDVEHICLE_DIR}/share/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules" ${CMAKE_MODULE_PATH})
 find_package(ODVDVehicle REQUIRED)
 
+
 ###########################################################################
 # Find ODVDOpenDLVData.
 set(CMAKE_MODULE_PATH "${ODVDOPENDLVDATA_DIR}/share/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules" ${CMAKE_MODULE_PATH})

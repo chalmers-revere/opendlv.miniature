@@ -1,6 +1,5 @@
 /**
- * proxy-miniature-pwm - Interface to PRU to generate PWM singlas at miniature vehicle.
- * Copyright (C) 2016 Revere
+ * Copyright (C) 2016 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,9 +16,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Pwm.h"
+#ifndef PROXY_MINIATURE_PWMPRU_H
+#define PROXY_MINIATURE_PWMPRU_H
 
-int32_t main(int32_t argc, char **argv) {
-    opendlv::proxy::miniature::Pwm pwm(argc, argv);
-    return pwm.runModule();
+#include "pru.h"
+
+namespace opendlv {
+namespace proxy {
+namespace miniature {
+
+class PwmPru : private Pru {
+   public:
+    PwmPru(uint16_t);
+    PwmPru(PwmPru const &) = delete;
+    PwmPru &operator=(PwmPru const &) = delete;
+    virtual ~PwmPru();
+
+    void setDefaultPwmValue(uint16_t, uint64_t);
+    void setPwmValue(uint16_t, uint64_t);
+    void start();
+
+   private:
+    void setPruDuty(uint16_t, uint64_t);
+    void updateDefaults();
+
+    static uint16_t const nsPerCycle = 95;
+    uint16_t pwmFrequency;
+    uint16_t timeout;
+};
+
+} 
 }
+}
+
+#endif
