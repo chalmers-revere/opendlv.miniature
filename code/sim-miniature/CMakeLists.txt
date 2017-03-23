@@ -17,7 +17,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project(opendlv-proxy-miniature)
+project(opendlv-sim-miniature)
 
 ###########################################################################
 # Set the search path for .cmake files.
@@ -38,6 +38,11 @@ include(CheckCxxTestEnvironment)
 find_package(OpenDaVINCI REQUIRED)
 
 ###########################################################################
+# Find OpenDLV (from OpenDaVINCI).
+set(OPENDLV_DIR "${OPENDAVINCI_DIR}")
+find_package(OpenDLV REQUIRED)
+
+###########################################################################
 # Set common include directories.
 include_directories(SYSTEM ${OPENDAVINCI_INCLUDE_DIRS})
 
@@ -47,9 +52,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES})
 
 ###########################################################################
 # Add subfolders with sources.
-add_subdirectory(analog)
-add_subdirectory(gpio)
-add_subdirectory(pwm)
+add_subdirectory(differential)
 
 ###########################################################################
 # Enable CPack to create .deb and .rpm.

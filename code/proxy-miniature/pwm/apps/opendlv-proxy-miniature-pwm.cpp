@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 Chalmers REVERE
+/**
+ * proxy-relays - Interface to relays.
+ * Copyright (C) 2016 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,30 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-message opendlv.proxy.ToggleRequest [id = 170] {
-  enum ToggleState {
-    Off = 0,
-    On = 1,
-  };
-  uint16 pin [id = 1];
-  ToggleState state [id = 2];
-}
+#include "Pwm.h"
 
-message opendlv.proxy.ToggleReading [id = 159] {
-  enum ToggleState {
-    Off = 0,
-    On = 1,
-  };
-  uint16 pin [id = 1];
-  ToggleState state [id = 2];
-}
-
-message opendlv.proxy.PwmRequest [id = 155] {
-  uint16 pin [id = 1];
-  uint32 dutyCycleNs [id = 2];
-}
-
-message opendlv.proxy.AnalogReading [id = 173] {
-  uint16 pin [id = 1];
-  float voltage [id = 2];
+int32_t main(int32_t argc, char **argv) {
+    opendlv::proxy::miniature::Pwm pwm(argc, argv);
+    return pwm.runModule();
 }

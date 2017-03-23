@@ -33,14 +33,14 @@ project(opendlv.miniature)
 ###########################################################################
 # If dpkg and rpmbuild are available, .deb and .rpm packages will be
 # created. Otherwise, the software is simply installed.
-IF(     NOT("${DPKG_EXECUTABLE}" STREQUAL "DPKG_EXECUTABLE-NOTFOUND")
-    AND NOT("${RPMBUILD_EXECUTABLE}" STREQUAL "RPMBUILD_EXECUTABLE-NOTFOUND") )
-    MESSAGE(STATUS "Enabling building .deb and .rpm packages.")
-    SET(MAKE_PACKAGE package)
+IF(NOT("${DPKG_EXECUTABLE}" STREQUAL "DPKG_EXECUTABLE-NOTFOUND")
+  AND NOT("${RPMBUILD_EXECUTABLE}" STREQUAL "RPMBUILD_EXECUTABLE-NOTFOUND") )
+  MESSAGE(STATUS "Enabling building .deb and .rpm packages.")
+  SET(MAKE_PACKAGE package)
 ELSE()
-    # If the platform does not provide dpkg and rpmbuild, make package is
-    # replaced with make install.
-    SET(MAKE_PACKAGE install)
+  # If the platform does not provide dpkg and rpmbuild, make package is
+  # replaced with make install.
+  SET(MAKE_PACKAGE install)
 ENDIF()
 
 ###########################################################################
@@ -62,10 +62,6 @@ include(FindJava REQUIRED)
 include(FindodDataStructureGenerator REQUIRED)
 
 ###########################################################################
-# Find odCANDataStructureGenerator.
-include(FindodCANDataStructureGenerator REQUIRED)
-
-###########################################################################
 # Find OpenDaVINCI.
 find_package(OpenDaVINCI REQUIRED)
 
@@ -85,42 +81,68 @@ set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
 ###########################################################################
 # This "external project" simply deletes the existing libodvdminiature.
-#ExternalProject_Add (libodvdminiature-cleanup
-#    DOWNLOAD_COMMAND ""
-#    UPDATE_COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_CURRENT_BINARY_DIR}/libodvdminiature
-#    PATCH_COMMAND ""
-#    SOURCE_DIR ""
-#    CONFIGURE_COMMAND ""
-#    BUILD_COMMAND ""
-#    TEST_COMMAND ""
-#    INSTALL_COMMAND "")
+ExternalProject_Add (libodvdminiature-cleanup
+  DOWNLOAD_COMMAND ""
+  UPDATE_COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_CURRENT_BINARY_DIR}/libodvdminiature
+  PATCH_COMMAND ""
+  SOURCE_DIR ""
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND ""
+  TEST_COMMAND ""
+  INSTALL_COMMAND "")
 
 # This "external project" builds libodvdminiature.
-#ExternalProject_Add (libodvdminiature
-#    DEPENDS libodvdminiature-cleanup
-#    DOWNLOAD_COMMAND ""
-#    UPDATE_COMMAND cd ${CMAKE_CURRENT_BINARY_DIR} && ${Java_JAVA_EXECUTABLE} -jar ${ODDATASTRUCTUREGENERATOR_EXECUTABLE} --withCMake ${CMAKE_CURRENT_SOURCE_DIR}/resources/odvd/ODVDMiniature.odvd
-#    PATCH_COMMAND ""
-#    SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/libodvdminiature"
-#    CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
-#    CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
-#    CMAKE_ARGS "-DCMAKE_TOOLCHAIN_FILE=${TOOLCHAIN_FILE}"
-#    CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
-#    TEST_BEFORE_INSTALL 1
-#    TEST_COMMAND ${CMAKE_CTEST_COMMAND} ${CTEST_PARAMETERS}
-#    INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/libodvdminiature-prefix/src/libodvdminiature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/libodvdminiature-prefix/src/libodvdminiature-build --target ${MAKE_PACKAGE})
+ExternalProject_Add (libodvdminiature
+  DEPENDS libodvdminiature-cleanup
+  DOWNLOAD_COMMAND ""
+  UPDATE_COMMAND cd ${CMAKE_CURRENT_BINARY_DIR} && ${Java_JAVA_EXECUTABLE} -jar ${ODDATASTRUCTUREGENERATOR_EXECUTABLE} --withCMake ${CMAKE_CURRENT_SOURCE_DIR}/resources/odvd/ODVDMiniature.odvd
+  PATCH_COMMAND ""
+  SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/libodvdminiature"
+  CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+  CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
+  CMAKE_ARGS "-DCMAKE_TOOLCHAIN_FILE=${TOOLCHAIN_FILE}"
+  CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
+  TEST_BEFORE_INSTALL 1
+  TEST_COMMAND ${CMAKE_CTEST_COMMAND} ${CTEST_PARAMETERS}
+  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/libodvdminiature-prefix/src/libodvdminiature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/libodvdminiature-prefix/src/libodvdminiature-build --target ${MAKE_PACKAGE})
 
 ###########################################################################
 # This "external project" builds and installs the software stack.
-ExternalProject_Add(proxy-miniature
-#    DEPENDS libodvdminiature
-    DOWNLOAD_COMMAND ""
-    UPDATE_COMMAND ""
-    SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/proxy-miniature"
-    CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
-    CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
-    CMAKE_ARGS "-DODVDVEHICLE_DIR=${ODVDVEHICLE_DIR}"
-    CMAKE_ARGS "-DODVDOPENDLVDATA_DIR=${ODVDOPENDLVDATA_DIR}"
-    CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
-    TEST_BEFORE_INSTALL 1
-    INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/proxy-miniature-prefix/src/proxy-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/proxy-miniature-prefix/src/proxy-miniature-build --target ${MAKE_PACKAGE})
+ExternalProject_Add (proxy-miniature
+  DEPENDS libodvdminiature
+  DOWNLOAD_COMMAND ""
+  UPDATE_COMMAND ""
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/proxy-miniature"
+  CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+  CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
+  CMAKE_ARGS "-DODVDVEHICLE_DIR=${ODVDVEHICLE_DIR}"
+  CMAKE_ARGS "-DODVDOPENDLVDATA_DIR=${ODVDOPENDLVDATA_DIR}"
+  CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
+  TEST_BEFORE_INSTALL 1
+  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/proxy-miniature-prefix/src/proxy-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/proxy-miniature-prefix/src/proxy-miniature-build --target ${MAKE_PACKAGE})
+
+ExternalProject_Add (sim-miniature
+  DEPENDS libodvdminiature
+  DOWNLOAD_COMMAND ""
+  UPDATE_COMMAND ""
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/sim-miniature"
+  CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+  CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
+  CMAKE_ARGS "-DODVDVEHICLE_DIR=${ODVDVEHICLE_DIR}"
+  CMAKE_ARGS "-DODVDOPENDLVDATA_DIR=${ODVDOPENDLVDATA_DIR}"
+  CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
+  TEST_BEFORE_INSTALL 1
+  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/sim-miniature-prefix/src/sim-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/sim-miniature-prefix/src/sim-miniature-build --target ${MAKE_PACKAGE})
+
+ExternalProject_Add (logic-miniature
+  DEPENDS libodvdminiature
+  DOWNLOAD_COMMAND ""
+  UPDATE_COMMAND ""
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/logic-miniature"
+  CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+  CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
+  CMAKE_ARGS "-DODVDVEHICLE_DIR=${ODVDVEHICLE_DIR}"
+  CMAKE_ARGS "-DODVDOPENDLVDATA_DIR=${ODVDOPENDLVDATA_DIR}"
+  CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
+  TEST_BEFORE_INSTALL 1
+  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/logic-miniature-prefix/src/logic-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/logic-miniature-prefix/src/logic-miniature-build --target ${MAKE_PACKAGE})

@@ -17,7 +17,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project(opendlv-proxy-miniature)
+project(opendlv-logic-miniature)
 
 ###########################################################################
 # Set the search path for .cmake files.
@@ -47,9 +47,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES})
 
 ###########################################################################
 # Add subfolders with sources.
-add_subdirectory(analog)
-add_subdirectory(gpio)
-add_subdirectory(pwm)
+add_subdirectory(navigation)
 
 ###########################################################################
 # Enable CPack to create .deb and .rpm.

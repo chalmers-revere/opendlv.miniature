@@ -30,10 +30,25 @@ cd /opt/opendlv.miniature.build
 
 echo "[opendlv.miniature Docker builder] Incremental build."
 
-mkdir -p build.system && cd build.system
-CCACHE_DIR=/opt/ccache PATH=/usr/lib/ccache:/opt/od4/bin:$PATH cmake -D CXXTEST_INCLUDE_DIR=/opt/opendlv.miniature.sources/thirdparty/cxxtest -D OPENDAVINCI_DIR=/opt/od4 -D ODVDVEHICLE_DIR=/opt/opendlv.core -D ODVDOPENDLVDATA_DIR=/opt/opendlv -D CMAKE_INSTALL_PREFIX=/opt/opendlv.miniature
+mkdir -p build.proxy && cd build.proxy
+CCACHE_DIR=/opt/ccache PATH=/usr/lib/ccache:/opt/od4/bin:$PATH cmake -D CXXTEST_INCLUDE_DIR=/opt/opendlv.miniature.sources/thirdparty/cxxtest -D OPENDAVINCI_DIR=/opt/od4 -D ODVDVEHICLE_DIR=/opt/opendlv.core -D ODVDOPENDLVDATA_DIR=/opt/opendlv -D CMAKE_INSTALL_PREFIX=/opt/opendlv.miniature /opt/opendlv.miniature.sources/code/proxy-miniature
 
 CCACHE_DIR=/opt/ccache PATH=/usr/lib/ccache:/opt/od4/bin:$PATH make -j4 && make test && make install
+
+cd ..
+
+mkdir -p build.sim && cd build.sim
+CCACHE_DIR=/opt/ccache PATH=/usr/lib/ccache:/opt/od4/bin:$PATH cmake -D CXXTEST_INCLUDE_DIR=/opt/opendlv.miniature.sources/thirdparty/cxxtest -D OPENDAVINCI_DIR=/opt/od4 -D ODVDVEHICLE_DIR=/opt/opendlv.core -D ODVDOPENDLVDATA_DIR=/opt/opendlv -D CMAKE_INSTALL_PREFIX=/opt/opendlv.miniature /opt/opendlv.miniature.sources/code/sim-miniature
+
+CCACHE_DIR=/opt/ccache PATH=/usr/lib/ccache:/opt/od4/bin:$PATH make -j4 && make test && make install
+
+cd ..
+
+mkdir -p build.system && cd build.system
+CCACHE_DIR=/opt/ccache PATH=/usr/lib/ccache:/opt/od4/bin:$PATH cmake -D CXXTEST_INCLUDE_DIR=/opt/opendlv.miniature.sources/thirdparty/cxxtest -D OPENDAVINCI_DIR=/opt/od4 -D ODVDVEHICLE_DIR=/opt/opendlv.core -D ODVDOPENDLVDATA_DIR=/opt/opendlv -D CMAKE_INSTALL_PREFIX=/opt/opendlv.miniature /opt/opendlv.miniature.sources/code/system-miniature
+
+CCACHE_DIR=/opt/ccache PATH=/usr/lib/ccache:/opt/od4/bin:$PATH make -j4 && make test && make install
+
 EOF
 
 chmod 755 /opt/opendlv.miniature.build/build.sh

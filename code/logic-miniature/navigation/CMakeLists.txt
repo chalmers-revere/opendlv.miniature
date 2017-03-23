@@ -16,7 +16,7 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-PROJECT (opendlv-proxy-miniature-analog)
+PROJECT (opendlv-logic-miniature-navigation)
 
 ###########################################################################
 # Set the search path for .cmake files.
@@ -125,10 +125,10 @@ ENDIF(CXXTEST_FOUND)
 
 ###############################################################################
 # Install this project.
-INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-proxy-miniature)
-INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-proxy-miniature)
-INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-proxy-miniature)
+INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-logic-miniature)
+INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-logic-miniature)
+INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-logic-miniature)
 
 # Install header files.
-INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-proxy-miniature COMPONENT opendlv-proxy-miniature)
+INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-logic-miniature COMPONENT opendlv-logic-miniature)
 

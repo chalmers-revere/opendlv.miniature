@@ -16,7 +16,7 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-PROJECT (opendlv-proxy-miniature-analog)
+PROJECT (opendlv-proxy-miniature-pwm)
 
 ###########################################################################
 # Set the search path for .cmake files.
@@ -63,7 +63,7 @@ set(AUTOMOTIVEDATA_DIR "${OPENDAVINCI_DIR}")
 find_package(AutomotiveData REQUIRED)
 
 ###############################################################################
-# Set header files from ODVDMiniature.
+# Set header files from miniature.
 INCLUDE_DIRECTORIES (SYSTEM ${ODVDMINIATURE_INCLUDE_DIRS})
 # Set header files from AutomotiveData.
 INCLUDE_DIRECTORIES (SYSTEM ${AUTOMOTIVEDATA_INCLUDE_DIRS})

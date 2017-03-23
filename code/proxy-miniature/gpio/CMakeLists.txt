@@ -16,7 +16,7 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-PROJECT (opendlv-proxy-miniature-analog)
+PROJECT (opendlv-proxy-miniature-gpio)
 
 ###########################################################################
 # Set the search path for .cmake files.

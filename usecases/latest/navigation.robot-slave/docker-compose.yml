@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+    proxy-miniature-analog-0:
+        build: .
+        volumes:
+            - /sys/:/sys/
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-analog --cid=${CID} --freq=10 --id=1"
+
+    proxy-miniature-gpio-0:
+        build: .
+        privileged: true    #writing to /sys/
+        volumes:
+            - /sys/:/sys/
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-gpio --cid=${CID} --freq=10 --id=1"
+    
+    proxy-miniature-pwm-0:
+        build: .
+        privileged: true    #writing to /sys/
+        volumes:
+            - /sys/:/sys/
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-pwm --cid=${CID} --id=1"

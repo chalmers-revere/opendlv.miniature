@@ -1,5 +1,6 @@
-/*
- * Copyright (C) 2016 Chalmers REVERE
+/**
+ * analogtestsuite - Test cases for the analog pin interface.
+ * Copyright (C) 2016 Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,30 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-message opendlv.proxy.ToggleRequest [id = 170] {
-  enum ToggleState {
-    Off = 0,
-    On = 1,
-  };
-  uint16 pin [id = 1];
-  ToggleState state [id = 2];
-}
+#ifndef ANALOG_TESTSUITE_H
+#define ANALOG_TESTSUITE_H
 
-message opendlv.proxy.ToggleReading [id = 159] {
-  enum ToggleState {
-    Off = 0,
-    On = 1,
-  };
-  uint16 pin [id = 1];
-  ToggleState state [id = 2];
-}
+#include "cxxtest/TestSuite.h"
 
-message opendlv.proxy.PwmRequest [id = 155] {
-  uint16 pin [id = 1];
-  uint32 dutyCycleNs [id = 2];
-}
+// Include local header files.
+#include "../include/Analog.h"
 
-message opendlv.proxy.AnalogReading [id = 173] {
-  uint16 pin [id = 1];
-  float voltage [id = 2];
-}
+class AnalogTest : public CxxTest::TestSuite {
+   public:
+    void setUp() {}
+
+    void tearDown() {}
+
+    void testApplication() {
+        TS_ASSERT(true);
+    }
+};
+
+#endif

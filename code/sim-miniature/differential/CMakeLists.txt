@@ -16,7 +16,7 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-PROJECT (opendlv-proxy-miniature-analog)
+PROJECT (opendlv-sim-miniature-differential)
 
 ###########################################################################
 # Set the search path for .cmake files.
@@ -44,9 +44,14 @@ INCLUDE (CheckCxxTestEnvironment)
 FIND_PACKAGE (OpenDaVINCI REQUIRED)
 
 ###########################################################################
-# Find ODVDVehicle.
-set(CMAKE_MODULE_PATH "${ODVDVEHICLE_DIR}/share/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules" ${CMAKE_MODULE_PATH})
-find_package(ODVDVehicle REQUIRED)
+# Find AutomotiveDate.
+set(AUTOMOTIVEDATA_DIR "${OPENDAVINCI_DIR}")
+find_package(AutomotiveData REQUIRED)
+
+###########################################################################
+# Find OpenDLV (from OpenDaVINVI).
+set(OPENDLV_DIR "${OPENDAVINCI_DIR}")
+find_package(OpenDLV REQUIRED)
 
 ###########################################################################
 # Find ODVDOpenDLVData.
@@ -57,32 +62,28 @@ find_package(ODVDOpenDLVData REQUIRED)
 # Find ODVDMiniature.
 find_package(ODVDMiniature REQUIRED)
 
-###########################################################################
-# Find AutomotiveData.
-set(AUTOMOTIVEDATA_DIR "${OPENDAVINCI_DIR}")
-find_package(AutomotiveData REQUIRED)
 
 ###############################################################################
-# Set header files from ODVDMiniature.
-INCLUDE_DIRECTORIES (SYSTEM ${ODVDMINIATURE_INCLUDE_DIRS})
-# Set header files from AutomotiveData.
-INCLUDE_DIRECTORIES (SYSTEM ${AUTOMOTIVEDATA_INCLUDE_DIRS})
-# Set header files from ODVDVehicle.
-INCLUDE_DIRECTORIES (SYSTEM ${ODVDVEHICLE_INCLUDE_DIRS})
-# Set header files from ODVDOpenDLVData.
-INCLUDE_DIRECTORIES (SYSTEM ${ODVDOPENDLVDATA_INCLUDE_DIRS})
 # Set header files from OpenDaVINCI.
-INCLUDE_DIRECTORIES (SYSTEM ${OPENDAVINCI_INCLUDE_DIRS})
+include_directories(SYSTEM ${OPENDAVINCI_INCLUDE_DIRS})
+# Set header files from AutomotiveData.
+include_directories(SYSTEM ${AUTOMOTIVEDATA_INCLUDE_DIRS})
+# Set header files from OpenDLV (from OpenDaVINCI).
+include_directories(SYSTEM ${OPENDLV_INCLUDE_DIRS})
+# Set header files from ODVDOpenDLVData.
+include_directories(SYSTEM ${ODVDOPENDLVDATA_INCLUDE_DIRS})
+# Set header files from ODVDMiniature.
+include_directories(SYSTEM ${ODVDMINIATURE_INCLUDE_DIRS})
+
 # Set include directory.
-INCLUDE_DIRECTORIES(include)
+include_directories(include)
 
 # Set libraries to link against.
 set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
-              ${ODVDMINIATURE_LIBRARIES}
-              ${ODVDVEHICLE_LIBRARIES}
+              ${AUTOMOTIVEDATA_LIBRARIES}
+              ${OPENDLV_LIBRARIES}
               ${ODVDOPENDLVDATA_LIBRARIES}
-              ${ODVDMINIATURE_LIBRARIES}
-              ${AUTOMOTIVEDATA_LIBRARIES})
+              ${ODVDMINIATURE_LIBRARIES})
 
 ###############################################################################
 # Build this project.
@@ -125,10 +126,10 @@ ENDIF(CXXTEST_FOUND)
 
 ###############################################################################
 # Install this project.
-INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-proxy-miniature)
-INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-proxy-miniature)
-INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-proxy-miniature)
+INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-sim-miniature)
+INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-sim-miniature)
+INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-sim-miniature)
 
 # Install header files.
-INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-proxy-miniature COMPONENT opendlv-proxy-miniature)
+INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-sim-miniature COMPONENT opendlv-sim-miniature)
 
