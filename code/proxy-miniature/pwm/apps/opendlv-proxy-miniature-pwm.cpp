@@ -1,6 +1,6 @@
 /**
- * proxy-relays - Interface to relays.
- * Copyright (C) 2016 Chalmers Revere
+ * proxy-miniature-pwm - Interface to PRU to generate PWM singlas at miniature vehicle.
+ * Copyright (C) 2016 Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
