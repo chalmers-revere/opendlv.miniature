@@ -33,29 +33,29 @@ namespace opendlv {
 namespace sim {
 namespace miniature {
 
-class Differential 
-  : public odcore::base::module::TimeTriggeredConferenceClientModule {
-   public:
-    Differential(int32_t const &, char **);
-    Differential(Differential const &) = delete;
-    Differential &operator=(Differential const &) = delete;
-    virtual ~Differential();
+class Differential : 
+  public odcore::base::module::TimeTriggeredConferenceClientModule {
+ public:
+  Differential(int32_t const &, char **);
+  Differential(Differential const &) = delete;
+  Differential &operator=(Differential const &) = delete;
+  virtual ~Differential();
 
-   private:
-    void nextContainer(odcore::data::Container &);
-    virtual void setUp();
-    virtual void tearDown();
-    odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-    void ConvertPwmToWheelAngularVelocity(uint16_t, uint32_t);
-    void ConvertSensorToAnalogReading(
-      automotive::miniature::SensorBoardData const &);
+ private:
+  void nextContainer(odcore::data::Container &);
+  virtual void setUp();
+  virtual void tearDown();
+  odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
+  void ConvertPwmToWheelAngularVelocity(uint16_t, uint32_t);
+  void ConvertSensorToAnalogReading(
+    automotive::miniature::SensorBoardData const &);
 
-    odcore::base::Mutex m_mutex;
-    opendlv::data::environment::EgoState m_currentEgoState;
-    bool m_debug;
-    double m_deltaTime;
-    double m_leftWheelAngularVelocity;
-    double m_rightWheelAngularVelocity;
+  odcore::base::Mutex m_mutex;
+  opendlv::data::environment::EgoState m_currentEgoState;
+  bool m_debug;
+  double m_deltaTime;
+  double m_leftWheelAngularVelocity;
+  double m_rightWheelAngularVelocity;
 };
 
 }
