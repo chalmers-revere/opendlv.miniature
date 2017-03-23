@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 
+#include <opendavinci/odcore/base/Mutex.h>
 #include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
 
 #include <automotivedata/GeneratedHeaders_AutomotiveData.h>
@@ -45,14 +46,16 @@ class Differential
     virtual void setUp();
     virtual void tearDown();
     odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
+    void ConvertPwmToWheelAngularVelocity(uint16_t, uint32_t);
     void ConvertSensorToAnalogReading(
       automotive::miniature::SensorBoardData const &);
 
-    opendlv::data::environment::EgoState m_currentState;
+    odcore::base::Mutex m_mutex;
+    opendlv::data::environment::EgoState m_currentEgoState;
     bool m_debug;
     double m_deltaTime;
-    double m_leftWheelSpeed;
-    double m_rightWheelSpeed;
+    double m_leftWheelAngularVelocity;
+    double m_rightWheelAngularVelocity;
 };
 
 }
