@@ -139,5 +139,5 @@ odsimirus.sensor5.showFOV = 1                   # Show FOV in monitor.
 #
 sim-miniature-differential.debug = 1
 
-system-miniature-example.gpio-pins = 31
-system-miniature-example.pwm-pins = 0,1
+logic-miniature-navigation.gpio-pins = 31
+logic-miniature-navigation.pwm-pins = 0,1

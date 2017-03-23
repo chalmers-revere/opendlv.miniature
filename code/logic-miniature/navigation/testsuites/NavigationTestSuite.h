@@ -16,15 +16,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef EXAMPLE_TESTSUITE_H
-#define EXAMPLE_TESTSUITE_H
+#ifndef NAVIGATION_TESTSUITE_H
+#define NAVIGATION_TESTSUITE_H
 
 #include "cxxtest/TestSuite.h"
 
 // Include local header files.
-#include "../include/Example.h"
+#include "../include/Navigation.h"
 
-class ExampleTest : public CxxTest::TestSuite {
+class NavigationTest : public CxxTest::TestSuite {
    public:
     void setUp() {}
 

@@ -52,9 +52,9 @@ services:
             - odsupercomponent
         command: "/opt/opendlv.miniature/bin/opendlv-sim-miniature-differential --cid=${CID} --freq=20"
 
-    system-miniature-example:
+    logic-miniature-navigation:
         build: .
         network_mode: "host"
         depends_on:
             - odsupercomponent
-        command: "/opt/opendlv.miniature/bin/opendlv-system-miniature-example --cid=${CID} --freq=1 --id=1"
+        command: "/opt/opendlv.miniature/bin/opendlv-logic-miniature-navigation --cid=${CID} --freq=10 --id=1"

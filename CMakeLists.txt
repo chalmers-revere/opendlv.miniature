@@ -134,15 +134,15 @@ ExternalProject_Add (sim-miniature
   TEST_BEFORE_INSTALL 1
   INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/sim-miniature-prefix/src/sim-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/sim-miniature-prefix/src/sim-miniature-build --target ${MAKE_PACKAGE})
 
-ExternalProject_Add (system-miniature
+ExternalProject_Add (logic-miniature
   DEPENDS libodvdminiature
   DOWNLOAD_COMMAND ""
   UPDATE_COMMAND ""
-  SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/system-miniature"
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/logic-miniature"
   CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
   CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
   CMAKE_ARGS "-DODVDVEHICLE_DIR=${ODVDVEHICLE_DIR}"
   CMAKE_ARGS "-DODVDOPENDLVDATA_DIR=${ODVDOPENDLVDATA_DIR}"
   CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
   TEST_BEFORE_INSTALL 1
-  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/system-miniature-prefix/src/system-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/system-miniature-prefix/src/system-miniature-build --target ${MAKE_PACKAGE})
+  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/logic-miniature-prefix/src/logic-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/logic-miniature-prefix/src/logic-miniature-build --target ${MAKE_PACKAGE})

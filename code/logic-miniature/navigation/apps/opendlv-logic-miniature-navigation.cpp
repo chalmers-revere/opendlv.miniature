@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Example.h"
+#include "Navigation.h"
 
 int32_t main(int32_t argc, char **argv) {
-    opendlv::system::miniature::Example example(argc, argv);
-    return example.runModule();
+    opendlv::logic::miniature::Navigation navigation(argc, argv);
+    return navigation.runModule();
 }
