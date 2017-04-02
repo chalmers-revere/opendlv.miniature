@@ -37,6 +37,7 @@ namespace miniature {
 Differential::Differential(const int &argc, char **argv)
   : TimeTriggeredConferenceClientModule(
       argc, argv, "sim-miniature-differential")
+  , m_mutex()
   , m_currentEgoState()
   , m_debug()
   , m_deltaTime()
