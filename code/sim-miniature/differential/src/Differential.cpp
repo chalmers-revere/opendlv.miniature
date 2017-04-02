@@ -115,27 +115,50 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Differential::body()
 
     double prevVelX = prevVelocity.getX();
     double prevVelY = prevVelocity.getY();
-
-    ///// TODO: Add kinematic equations below.
-
-    double velX = 0.0;
-    double velY = 0.0;
-    //double yawRate = 0.0;
     
+    // The division is needed due to a scaling problem, in order to convert into
+    // meters. In your code below, everything will be meters.
+    double prevPosX = prevPosition.getX() / 10.0;
+    double prevPosY = prevPosition.getY() / 10.0;
+
+    double prevYaw = prevRotation.getZ();
+    // NOTE: Do not change the code above.
+
+
+
+
+    ///// TODO: Add kinematic equations below. Use the prepared class global
+    ///// variables for wheel speeds (already saved, see the below method).
+
+    double velX = 0.0; // Placeholder.
+    double velY = 0.0; // Placeholder.
+    //double yawRate = 0.0; // Placeholder.
+   
     std::cout << "TODO: Add kinematic equations." << std::endl;
     ///// Kinematic equations above.
 
 
-    ///// TODO: Integrate simulation below.
 
-    double posX = 0.0;
-    double posY = 0.0;
-    double yaw = 0.0;
+
+    ///// TODO: Integrate simulation below. The time step is already saved in
+    ///// a global variable.
+
+    double posX = prevPosX; // Placeholder.
+    double posY = prevPosY; // Placeholder.
+    double yaw = prevYaw; // Placeholder.
     
     std::cout << "TODO: Integrate simulation." << std::endl;
     ///// Integration above.
 
+
+
     
+
+    // Due to a simulation scaling problem, the position is scaled. 
+    // NOTE: Do not change the code below.
+    posX = posX * 10.0;
+    posY = posY * 10.0;
+
     double roll = 0.0;
     double pitch = 0.0;
     double posZ = 0.0;
@@ -164,6 +187,7 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Differential::body()
 void Differential::ConvertPwmToWheelAngularVelocity(uint16_t a_pin, 
     uint32_t a_dutyCycleNs)
 {
+  // NOTE: Do not change this method.
   int32_t const minReverseDutyCycleNs = 1000000; 
   int32_t const neutralDutyCycleNs = 1500000; 
   int32_t const maxForwardDutyCycleNs = 2000000; 
@@ -192,16 +216,18 @@ void Differential::ConvertPwmToWheelAngularVelocity(uint16_t a_pin,
 void Differential::ConvertSensorToAnalogReading(
   automotive::miniature::SensorBoardData const &a_sensorBoardData)
 {
+  // NOTE: Do not change this method.
   std::map<uint32_t, double> mapOfDistances = 
       a_sensorBoardData.getMapOfDistances();
-  
+ 
+  double const maxDistance = 4.0f * 10;
+
   for (auto distanceReading : mapOfDistances) {
     uint32_t sensorId = distanceReading.first;
     double distance = distanceReading.second;
-
+    
     float voltage = 1.8f;
-    if (distance > 0.0) {
-      double const maxDistance = 5.0f;
+    if (distance > 0.0 && distance < maxDistance) {
       voltage = 1.8f * static_cast<float>(distance / maxDistance);
     }
 
