@@ -19,7 +19,7 @@
 # GLOBAL CONFIGURATION
 #
 
-global.car = file:///opt/opendlv.data/Car1.objx
+global.car = file:///opt/opendlv.data/Robot1.objx
 global.scenario = file:///opt/opendlv.data/Maze.scnx
 global.showGrid = 0
 
