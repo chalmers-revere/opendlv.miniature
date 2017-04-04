@@ -159,8 +159,6 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Differential::body()
     posX = posX * 10.0;
     posY = posY * 10.0;
 
-    double roll = 0.0;
-    double pitch = 0.0;
     double posZ = 0.0;
     double velZ = 0.0;
     double accZ = 0.0;
@@ -169,9 +167,14 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Differential::body()
     double accY = (velY - prevVelY) / m_deltaTime;
 
     opendlv::data::environment::Point3 position(posX, posY, posZ);
-    opendlv::data::environment::Point3 rotation(roll, pitch, yaw);
+    opendlv::data::environment::Point3 rotation(1.0, 0.0, 0.0);
     opendlv::data::environment::Point3 velocity(velX, velY, velZ);
     opendlv::data::environment::Point3 acceleration(accX, accY, accZ);
+
+
+    rotation.rotateZ(yaw);
+    rotation.normalize();
+
     opendlv::data::environment::EgoState egoState(position, rotation, velocity,
         acceleration);
 
