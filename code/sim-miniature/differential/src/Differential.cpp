@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <string>
+#include <math.h>
 
 #include <opendavinci/odcore/base/KeyValueConfiguration.h>
 #include <opendavinci/odcore/base/Lock.h>
@@ -121,7 +122,7 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Differential::body()
     double prevPosX = prevPosition.getX() / 10.0;
     double prevPosY = prevPosition.getY() / 10.0;
 
-    double prevYaw = prevRotation.getZ();
+    double prevYaw = atan2(prevRotation.getY(), prevRotation.getX());
     // NOTE: Do not change the code above.
 
 
