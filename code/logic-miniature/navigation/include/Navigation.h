@@ -16,24 +16,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SYSTEM_MINIATURE_EXAMPLE_H
-#define SYSTEM_MINIATURE_EXAMPLE_H
+#ifndef LOGIC_MINIATURE_NAVIGATION_H
+#define LOGIC_MINIATURE_NAVIGATION_H
 
-
+#include <map>
 #include <memory>
 
+#include <opendavinci/odcore/base/Mutex.h>
 #include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
 
 namespace opendlv {
-namespace system {
+namespace logic {
 namespace miniature {
 
-class Example : public odcore::base::module::TimeTriggeredConferenceClientModule {
+class Navigation : 
+  public odcore::base::module::TimeTriggeredConferenceClientModule {
  public:
-  Example(const int &, char **);
-  Example(const Example &) = delete;
-  Example &operator=(const Example &) = delete;
-  virtual ~Example();
+  Navigation(const int &, char **);
+  Navigation(const Navigation &) = delete;
+  Navigation &operator=(const Navigation &) = delete;
+  virtual ~Navigation();
   virtual void nextContainer(odcore::data::Container &);
 
  private:
@@ -41,8 +43,11 @@ class Example : public odcore::base::module::TimeTriggeredConferenceClientModule
   void tearDown();
   virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
 
-  std::vector<uint16_t> m_gpioPins;
-  std::vector<uint16_t> m_pwmPins;
+  odcore::base::Mutex m_mutex;
+  std::map<uint16_t, float> m_analogReadings;
+  std::map<uint16_t, bool> m_gpioReadings;
+  std::vector<uint16_t> m_gpioOutputPins;
+  std::vector<uint16_t> m_pwmOutputPins;
 };
 
 }

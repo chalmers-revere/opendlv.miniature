@@ -33,14 +33,15 @@ project(opendlv.miniature)
 ###########################################################################
 # If dpkg and rpmbuild are available, .deb and .rpm packages will be
 # created. Otherwise, the software is simply installed.
-IF(NOT("${DPKG_EXECUTABLE}" STREQUAL "DPKG_EXECUTABLE-NOTFOUND")
-  AND NOT("${RPMBUILD_EXECUTABLE}" STREQUAL "RPMBUILD_EXECUTABLE-NOTFOUND") )
-  MESSAGE(STATUS "Enabling building .deb and .rpm packages.")
-  SET(MAKE_PACKAGE package)
+IF(     NOT("${DPKG_EXECUTABLE}" STREQUAL "DPKG_EXECUTABLE-NOTFOUND")
+    AND NOT("${RPMBUILD_EXECUTABLE}" STREQUAL "RPMBUILD_EXECUTABLE-NOTFOUND")
+    AND ("${PACKAGING_ENABLED}" STREQUAL "YES") )
+    MESSAGE(STATUS "Enabling building .deb and .rpm packages.")
+    SET(MAKE_PACKAGE package)
 ELSE()
-  # If the platform does not provide dpkg and rpmbuild, make package is
-  # replaced with make install.
-  SET(MAKE_PACKAGE install)
+    # If the platform does not provide dpkg and rpmbuild, make package is
+    # replaced with make help to simply have a no-op.
+    SET(MAKE_PACKAGE help)
 ENDIF()
 
 ###########################################################################
@@ -60,10 +61,6 @@ include(FindJava REQUIRED)
 ###########################################################################
 # Find odDataStructureGenerator.
 include(FindodDataStructureGenerator REQUIRED)
-
-###########################################################################
-# Find odCANDataStructureGenerator.
-include(FindodCANDataStructureGenerator REQUIRED)
 
 ###########################################################################
 # Find OpenDaVINCI.
@@ -125,15 +122,28 @@ ExternalProject_Add (proxy-miniature
   TEST_BEFORE_INSTALL 1
   INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/proxy-miniature-prefix/src/proxy-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/proxy-miniature-prefix/src/proxy-miniature-build --target ${MAKE_PACKAGE})
 
-ExternalProject_Add (system-miniature
+ExternalProject_Add (sim-miniature
   DEPENDS libodvdminiature
   DOWNLOAD_COMMAND ""
   UPDATE_COMMAND ""
-  SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/system-miniature"
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/sim-miniature"
   CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
   CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
   CMAKE_ARGS "-DODVDVEHICLE_DIR=${ODVDVEHICLE_DIR}"
   CMAKE_ARGS "-DODVDOPENDLVDATA_DIR=${ODVDOPENDLVDATA_DIR}"
   CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
   TEST_BEFORE_INSTALL 1
-  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/system-miniature-prefix/src/system-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/system-miniature-prefix/src/system-miniature-build --target ${MAKE_PACKAGE})
+  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/sim-miniature-prefix/src/sim-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/sim-miniature-prefix/src/sim-miniature-build --target ${MAKE_PACKAGE})
+
+ExternalProject_Add (logic-miniature
+  DEPENDS libodvdminiature
+  DOWNLOAD_COMMAND ""
+  UPDATE_COMMAND ""
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/logic-miniature"
+  CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+  CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
+  CMAKE_ARGS "-DODVDVEHICLE_DIR=${ODVDVEHICLE_DIR}"
+  CMAKE_ARGS "-DODVDOPENDLVDATA_DIR=${ODVDOPENDLVDATA_DIR}"
+  CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
+  TEST_BEFORE_INSTALL 1
+  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/logic-miniature-prefix/src/logic-miniature-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/logic-miniature-prefix/src/logic-miniature-build --target ${MAKE_PACKAGE})

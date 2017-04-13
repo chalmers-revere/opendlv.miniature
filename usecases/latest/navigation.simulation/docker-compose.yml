@@ -1,0 +1,60 @@
+version: '2'
+
+services:
+    odsupercomponent:
+        build: .
+        network_mode: "host"
+        volumes:
+        - .:/opt/opendlv.data
+        command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/opendlv.data/configuration"
+    
+    odsimirus:
+        build: .
+        network_mode: "host"
+        volumes:
+        - .:/opt/opendlv.data
+        depends_on:
+            - odsupercomponent
+        command: "/opt/od4/bin/odsimirus --cid=${CID} --freq=10"
+    
+    odcockpit:
+        build: .
+        network_mode: "host"
+        environment:
+        - DISPLAY=$DISPLAY
+        volumes:
+        - /tmp/.X11-unix:/tmp/.X11-unix
+        - .:/opt/opendlv.data
+        ipc: host
+        user: odv
+        depends_on:
+            - odsupercomponent
+        command: "/opt/od4/bin/odcockpit --cid=${CID}"
+    
+#    odsimcamera:
+#        build: .
+#        network_mode: "host"
+#        environment:
+#        - DISPLAY=$DISPLAY
+#        volumes:
+#        - /tmp/.X11-unix:/tmp/.X11-unix
+#        - .:/opt/opendlv.data
+#        ipc: host
+#        user: odv
+#        depends_on:
+#            - odsupercomponent
+#        command: "/opt/od4/bin/odsimcamera --cid=${CID} --freq=10"
+
+    sim-miniature-differential:
+        build: .
+        network_mode: "host"
+        depends_on:
+            - odsupercomponent
+        command: "/opt/opendlv.miniature/bin/opendlv-sim-miniature-differential --cid=${CID} --freq=20"
+
+    logic-miniature-navigation:
+        build: .
+        network_mode: "host"
+        depends_on:
+            - odsupercomponent
+        command: "/opt/opendlv.miniature/bin/opendlv-logic-miniature-navigation --cid=${CID} --freq=10 --id=1"

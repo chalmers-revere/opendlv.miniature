@@ -17,5 +17,5 @@
 
 # Date: 2016-09-09
 
-FROM seresearch/opendlv-miniature-on-opendlv-on-opendlv-core-on-opendavinci-ubuntu-16.04-armhf-complete:latest
+FROM seresearch/miniature-on-opendlv-on-opendlv-core-on-opendavinci-on-base:latest
 

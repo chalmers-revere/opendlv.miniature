@@ -1,6 +1,5 @@
 /**
- * proxy-relays - Interface to relays.
- * Copyright (C) 2016 Chalmers Revere
+ * Copyright (C) 2016 Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,9 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Example.h"
+#ifndef NAVIGATION_TESTSUITE_H
+#define NAVIGATION_TESTSUITE_H
 
-int32_t main(int32_t argc, char **argv) {
-    opendlv::system::miniature::Example example(argc, argv);
-    return example.runModule();
-}
+#include "cxxtest/TestSuite.h"
+
+// Include local header files.
+#include "../include/Navigation.h"
+
+class NavigationTest : public CxxTest::TestSuite {
+   public:
+    void setUp() {}
+
+    void tearDown() {}
+
+    void testApplication() {
+        TS_ASSERT(true);
+    }
+};
+
+#endif

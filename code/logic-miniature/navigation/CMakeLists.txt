@@ -16,7 +16,7 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-PROJECT (opendlv-system-miniature-example)
+PROJECT (opendlv-logic-miniature-navigation)
 
 ###########################################################################
 # Set the search path for .cmake files.
@@ -62,15 +62,8 @@ find_package(ODVDMiniature REQUIRED)
 set(AUTOMOTIVEDATA_DIR "${OPENDAVINCI_DIR}")
 find_package(AutomotiveData REQUIRED)
 
-###########################################################################
-# Find odcantools.
-set(ODCANTOOLS_DIR "${OPENDAVINCI_DIR}")
-find_package(odcantools REQUIRED)
-
 ###############################################################################
-# Set header files from ODCANTools.
-INCLUDE_DIRECTORIES (SYSTEM ${ODCANTOOLS_INCLUDE_DIRS})
-# Set header files from miniature.
+# Set header files from ODVDMiniature.
 INCLUDE_DIRECTORIES (SYSTEM ${ODVDMINIATURE_INCLUDE_DIRS})
 # Set header files from AutomotiveData.
 INCLUDE_DIRECTORIES (SYSTEM ${AUTOMOTIVEDATA_INCLUDE_DIRS})
@@ -89,8 +82,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
               ${ODVDVEHICLE_LIBRARIES}
               ${ODVDOPENDLVDATA_LIBRARIES}
               ${ODVDMINIATURE_LIBRARIES}
-              ${AUTOMOTIVEDATA_LIBRARIES}
-              ${ODCANTOOLS_LIBRARIES})
+              ${AUTOMOTIVEDATA_LIBRARIES})
 
 ###############################################################################
 # Build this project.
@@ -133,10 +125,10 @@ ENDIF(CXXTEST_FOUND)
 
 ###############################################################################
 # Install this project.
-INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-system-miniature)
-INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-system-miniature)
-INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-system-miniature)
+INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-logic-miniature)
+INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-logic-miniature)
+INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-logic-miniature)
 
 # Install header files.
-INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-system-miniature COMPONENT opendlv-system-miniature)
+INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-logic-miniature COMPONENT opendlv-logic-miniature)
 
