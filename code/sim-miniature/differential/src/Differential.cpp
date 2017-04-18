@@ -198,16 +198,20 @@ void Differential::ConvertPwmToWheelAngularVelocity(uint16_t a_pin,
 
   double const minReverseAngularVelocity = -10.0;
   double const maxForwardAngularVelocity = 10.0;
+
+  int32_t dutyCycleNs = (a_dutyCycleNs < minReverseDutyCycleNs || 
+      a_dutyCycleNs > maxForwardDutyCycleNs) 
+    ? neutralDutyCycleNs : a_dutyCycleNs;
   
   double wheelAngularVelocity;
-  if (a_dutyCycleNs > neutralDutyCycleNs) {
+  if (dutyCycleNs > neutralDutyCycleNs) {
     wheelAngularVelocity = maxForwardAngularVelocity * 
-      (a_dutyCycleNs - neutralDutyCycleNs) / 
-      (maxForwardDutyCycleNs - neutralDutyCycleNs); 
+      (dutyCycleNs - neutralDutyCycleNs) / 
+      static_cast<double>(maxForwardDutyCycleNs - neutralDutyCycleNs); 
   } else {
     wheelAngularVelocity = minReverseAngularVelocity * 
-      (1.0 - (minReverseDutyCycleNs - a_dutyCycleNs) / 
-      (minReverseDutyCycleNs - neutralDutyCycleNs));
+      (1.0 - (minReverseDutyCycleNs - dutyCycleNs) / 
+      static_cast<double>(minReverseDutyCycleNs - neutralDutyCycleNs));
   }
       
   if (a_pin == 0) {
