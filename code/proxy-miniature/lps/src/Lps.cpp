@@ -42,6 +42,7 @@ Lps::Lps(int32_t const &argc, char **argv)
     , m_needleNormYaw()
     , m_searchMarginHalf()
     , m_frameId()
+    , m_debug()
 {
 }
 
@@ -52,6 +53,8 @@ Lps::~Lps()
 void Lps::setUp() 
 {
   odcore::base::KeyValueConfiguration kv = getKeyValueConfiguration();
+
+  m_debug = (kv.getValue<int32_t>("proxy-miniature-lps.debug") == 1);
 
   m_searchMarginHalf = 0.5f * 
     kv.getValue<float>("proxy-miniature-lps.searchMargin");
@@ -119,10 +122,15 @@ void Lps::nextContainer(odcore::data::Container &a_container)
   if (a_container.getDataType() == opendlv::proxy::QtmFrame::ID()) {
     opendlv::proxy::QtmFrame qtmFrame = 
         a_container.getData<opendlv::proxy::QtmFrame>();
-    
     std::vector<opendlv::model::Cartesian3> markers = 
         qtmFrame.getListOfMarkers();
+      if (m_debug) {
+        std::cout << qtmFrame.toString() << std::endl;
+      }
     Search(markers);
+    for (opendlv::model::Cartesian3 marker : markers) {
+      // std::cout << marker.toString() << std::endl;
+    }
   }
 }
 
@@ -170,7 +178,7 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
 
     uint32_t const needleMarkerCount = m_needleMarkerDistances.size();
     std::vector<float> foundDistances(needleMarkerCount);
-    std::vector<uint32_t> foundIndices(needleMarkerCount);
+    std::vector<int32_t> foundIndices(needleMarkerCount);
     for (uint32_t j = 0; j < needleMarkerCount; j++) {
       foundDistances[j] = std::numeric_limits<float>::max();
       foundIndices[j] = -1;
@@ -179,13 +187,12 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
     for (uint32_t j = 0; j < needleMarkerCount; j++) {
       float searchedDistance = m_needleMarkerDistances[j];
 
-//      std::cout << " SEARCH FOR DISTANCE: " << searchedDistance << std::endl;
+     std::cout << " SEARCH FOR DISTANCE: " << searchedDistance << std::endl;
 
       for (uint32_t k = 0; k < haystackMarkerCount; k++) {
-        if (k == i) {
+        if(i == k) {
           continue;
         }
-
         opendlv::model::Cartesian3 candidate = a_haystackMarkers[k];
         
         float dx = candidate.getX() - origoCandidate.getX();
@@ -194,10 +201,10 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
       
         float distance = sqrt(dx*dx + dy*dy + dz*dz);
 
-   //     std::cout << "  IS IT: " << dx << " " << dy << " = " << distance << "?" << std::endl;
+       std::cout << "  IS IT: " << dx << " " << dy << " = " << distance << "?" << std::endl;
 
-        if (searchedDistance > distance - m_searchMarginHalf &&
-            searchedDistance < distance + m_searchMarginHalf)
+        if (searchedDistance + m_searchMarginHalf > distance &&
+            searchedDistance - m_searchMarginHalf < distance )
         {
           float prevFoundDistance = foundDistances[j];
           float currentError = std::abs(distance - searchedDistance);
@@ -206,7 +213,7 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
           if (currentError < prevError) {
             foundDistances[j] = distance;
             foundIndices[j] = k;
-//            std::cout << "   YES, " << searchedDistance << " == " << distance << std::endl;
+            std::cout << "   YES, " << searchedDistance << " == " << distance << std::endl;
           }
         }
       }
@@ -220,6 +227,7 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
           isNeedleFound = false;
           break;
         }
+        std::cout << "    FOUND CANDIDATE, index = " << index << std::endl;
         opendlv::model::Cartesian3 candidate = a_haystackMarkers[index];
         needleMarkers.push_back(candidate);
       }
@@ -227,7 +235,6 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
       // TODO: Check that we don't use the same node twice..
 
       if (isNeedleFound) {
-        std::cout << "    FOUND!!!" << std::endl;
         FindState(needleMarkers);
       }
     }
@@ -294,7 +301,9 @@ void Lps::FindState(std::vector<opendlv::model::Cartesian3> a_needleMarkers)
   opendlv::model::Cartesian3 position(x0, y0, z0);
   opendlv::model::Cartesian3 angularDisplacement(roll, pitch, yaw);
   opendlv::model::State state(position, angularDisplacement, m_frameId);
-
+  if (m_debug) {
+    std::cout << state.toString() << std::endl;
+  }
   odcore::data::Container c(state);
   getConference().send(c);
 }

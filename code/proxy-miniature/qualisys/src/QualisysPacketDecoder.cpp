@@ -43,7 +43,7 @@ QualisysPacketDecoder::QualisysPacketDecoder(
 
 QualisysPacketDecoder::~QualisysPacketDecoder() {}
 
-void QualisysPacketDecoder::nextPacket(odcore::io::Packet const &a_packet)
+void QualisysPacketDecoder::nextPacket(odcore::data::Packet const &a_packet)
 {
   std::string const dataString = a_packet.getData();
   Buffer buffer;

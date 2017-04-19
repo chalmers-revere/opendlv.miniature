@@ -52,6 +52,7 @@ class Lps : public odcore::base::module::DataTriggeredConferenceClientModule {
     float m_needleNormYaw;
     float m_searchMarginHalf;
     int16_t m_frameId;
+    bool m_debug;
 
 };
 

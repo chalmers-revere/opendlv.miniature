@@ -19,14 +19,9 @@
 #ifndef PROXY_MINIATURE_QUALISYSPACKETDECODER_H
 #define PROXY_MINIATURE_QUALISYSSTRINGDECODER_H
 
-// #include <sstream>
-// #include <string>
-
-
-
 #include <opendavinci/odcore/io/conference/ContainerConference.h>
-#include <opendavinci/odcore/io/Packet.h>
 #include <opendavinci/odcore/io/PacketListener.h>
+#include <opendavinci/generated/odcore/data/Packet.h>
 
 namespace opendlv {
 namespace proxy {
@@ -45,7 +40,7 @@ class QualisysPacketDecoder : public odcore::io::PacketListener {
 
 
    private:
-    virtual void nextPacket(odcore::io::Packet const &);
+    virtual void nextPacket(odcore::data::Packet const &);
 
     odcore::io::conference::ContainerConference &m_conference;
     bool m_debug;
