@@ -81,6 +81,15 @@ message(STATUS "Installing opendlv.miniature to ${INSTALL_DIR}.")
 set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
 ###########################################################################
+# This "external project" builds and installs the PRU driver.
+ExternalProject_Add (am335x-pru
+  DOWNLOAD_COMMAND ""
+  UPDATE_COMMAND ""
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/thirdparty/am335x_pru"
+  CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/am335x-pru-prefix/src/am335x-pru-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/am335x-pru-prefix/src/am335x-pru-build --target ${MAKE_PACKAGE})
+
+###########################################################################
 # This "external project" simply deletes the existing libodvdminiature.
 ExternalProject_Add (libodvdminiature-cleanup
   DOWNLOAD_COMMAND ""
