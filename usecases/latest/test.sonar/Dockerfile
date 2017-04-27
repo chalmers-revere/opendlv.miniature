@@ -17,5 +17,5 @@
 
 # Date: 2016-09-09
 
-FROM seresearch/miniature-on-opendlv-on-opendlv-core-on-opendavinci-on-base:latest
+FROM seresearch/miniature-on-opendlv-on-opendlv-core-on-opendavinci-on-base-armhf:latest
 
