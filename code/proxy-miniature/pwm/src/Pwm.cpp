@@ -111,7 +111,8 @@ void Pwm::nextContainer(odcore::data::Container &a_container)
   if (!m_initialised) {
     return;
   }
-  if (a_container.getDataType() == opendlv::proxy::PwmRequest::ID()) {
+  if (a_container.getDataType() == opendlv::proxy::PwmRequest::ID() &&
+      a_container.getSenderStamp() == getIdentifier()) {
     opendlv::proxy::PwmRequest request = 
         a_container.getData<opendlv::proxy::PwmRequest>();
     uint16_t pin = request.getPin();
