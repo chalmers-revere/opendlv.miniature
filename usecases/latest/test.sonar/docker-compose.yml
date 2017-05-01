@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+    odsupercomponent:
+        build: .
+        network_mode: "host"
+        volumes:
+        - .:/opt/opendlv.data
+        command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/opendlv.data/configuration"
+
+    proxy-miniature-sonar-pru:
+        build: .
+        privileged: true    #writing to /sys/
+        volumes:
+            - /dev/:/dev/
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-sonar-pru --cid=${CID} --freq=2 --id=1"
