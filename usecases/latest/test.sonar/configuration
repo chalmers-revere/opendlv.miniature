@@ -8,4 +8,4 @@ odsupercomponent.pulsetimeack.exclude = odcockpit
 
 proxy-miniature-sonar-pru.pruIndex = 0
 proxy-miniature-sonar-pru.debug = 1
-proxy-miniature-sonar-pru.firmwarePath = "../share/proxy-miniature-sonar-pru/firmware/hcsr04.p"
+proxy-miniature-sonar-pru.firmwarePath = ../share/opendlv-proxy-miniature-sonar-pru/firmware/hcsr04.bin

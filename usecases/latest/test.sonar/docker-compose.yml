@@ -12,6 +12,6 @@ services:
         build: .
         privileged: true    #writing to /sys/
         volumes:
-            - /sys/:/sys/
+            - /dev/:/dev/
         network_mode: "host"
         command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-sonar-pru --cid=${CID} --freq=2 --id=1"

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Chalmers Revere
+ * Copyright (C) 2017 Chalmers Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,7 +65,7 @@ void SonarPru::setUp()
   tpruss_intc_initdata prussIntcInitData = PRUSS_INTC_INITDATA;
   prussdrv_init();
 
-	if (prussdrv_open(PRU_EVTOUT_0)) {
+  if (prussdrv_open(PRU_EVTOUT_0)) {
     std::cerr << "PRU" << m_pruIndex << " open failed" << std::endl;
     m_initialized = false;
     return;
@@ -103,18 +103,18 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode SonarPru::body()
 
     prussdrv_pru_wait_event (PRU_EVTOUT_0);
     prussdrv_pru_clear_event(PRU_EVTOUT_0, PRU0_ARM_INTERRUPT);
-		
+
     // Roundtrip 1 cm: 58.44 us
     double distance = static_cast<double>(m_pruData[0]) / 58.44;
-      
+  
     opendlv::proxy::ProximityReading message(distance);
     odcore::data::Container c(message);
     getConference().send(c);
-    
+
     if (m_debug) {
       std::cout << "Distance " << distance << std::endl;
     }
-	}
+  }
 
   return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;
 }
