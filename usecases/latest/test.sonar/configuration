@@ -1,0 +1,11 @@
+global.buffer.memorySegmentSize = 2800000 # Size of a memory segment in bytes.
+global.buffer.numberOfMemorySegments = 4 # Number of memory segments.
+
+odsupercomponent.pulseshift.shift = 10000 # (in microseconds)
+odsupercomponent.pulsetimeack.timeout = 5000 # (in milliseconds)
+odsupercomponent.pulsetimeack.yield = 5000 # (in microseconds)
+odsupercomponent.pulsetimeack.exclude = odcockpit
+
+proxy-miniature-sonar-pru.pruIndex = 0
+proxy-miniature-sonar-pru.debug = 1
+proxy-miniature-sonar-pru.firmwarePath = ../share/opendlv-proxy-miniature-sonar-pru/firmware/hcsr04.bin

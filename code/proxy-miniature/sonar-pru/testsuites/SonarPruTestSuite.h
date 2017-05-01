@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2016 Chalmers REVERE
+/**
+ * Copyright (C) 2016 Revere
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,34 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-message opendlv.proxy.ToggleRequest [id = 170] {
-  enum ToggleState {
-    Off = 0,
-    On = 1,
-  };
-  uint16 pin [id = 1];
-  ToggleState state [id = 2];
-}
+#ifndef SONARPRU_TESTSUITE_H
+#define SONARPRU_TESTSUITE_H
 
-message opendlv.proxy.ToggleReading [id = 159] {
-  enum ToggleState {
-    Off = 0,
-    On = 1,
-  };
-  uint16 pin [id = 1];
-  ToggleState state [id = 2];
-}
+#include "cxxtest/TestSuite.h"
 
-message opendlv.proxy.PwmRequest [id = 155] {
-  uint16 pin [id = 1];
-  uint32 dutyCycleNs [id = 2];
-}
+// Include local header files.
+#include "../include/SonarPru.h"
 
-message opendlv.proxy.AnalogReading [id = 173] {
-  uint16 pin [id = 1];
-  float voltage [id = 2];
-}
+class ProximityHcsr04Test : public CxxTest::TestSuite {
+   public:
+    void setUp() {}
 
-message opendlv.proxy.ProximityReading [id = 156] {
-  double proximity [id = 1];
-}
+    void tearDown() {}
+
+    void testApplication() {
+        TS_ASSERT(true);
+    }
+};
+
+#endif

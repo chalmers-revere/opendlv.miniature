@@ -81,6 +81,15 @@ message(STATUS "Installing opendlv.miniature to ${INSTALL_DIR}.")
 set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
 ###########################################################################
+# This "external project" builds and installs the PRU driver.
+ExternalProject_Add (am335x-pruss
+  DOWNLOAD_COMMAND ""
+  UPDATE_COMMAND ""
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/thirdparty/am335x_pru"
+  CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
+  INSTALL_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/am335x-pruss-prefix/src/am335x-pruss-build --target install COMMAND ${CMAKE_COMMAND} --build ${CMAKE_CURRENT_BINARY_DIR}/am335x-pruss-prefix/src/am335x-pruss-build --target ${MAKE_PACKAGE})
+
+###########################################################################
 # This "external project" simply deletes the existing libodvdminiature.
 ExternalProject_Add (libodvdminiature-cleanup
   DOWNLOAD_COMMAND ""
@@ -110,12 +119,13 @@ ExternalProject_Add (libodvdminiature
 ###########################################################################
 # This "external project" builds and installs the software stack.
 ExternalProject_Add (proxy-miniature
-  DEPENDS libodvdminiature
+  DEPENDS libodvdminiature am335x-pruss
   DOWNLOAD_COMMAND ""
   UPDATE_COMMAND ""
   SOURCE_DIR "${CMAKE_SOURCE_DIR}/code/proxy-miniature"
   CMAKE_ARGS "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}"
   CMAKE_ARGS "-DOPENDAVINCI_DIR=${OPENDAVINCI_DIR}"
+  CMAKE_ARGS "-DPRUSS_DIR=${INSTALL_DIR}"
   CMAKE_ARGS "-DODVDVEHICLE_DIR=${ODVDVEHICLE_DIR}"
   CMAKE_ARGS "-DODVDOPENDLVDATA_DIR=${ODVDOPENDLVDATA_DIR}"
   CMAKE_ARGS "-DCXXTEST_INCLUDE_DIR=${CXXTEST_INCLUDE_DIR}"
