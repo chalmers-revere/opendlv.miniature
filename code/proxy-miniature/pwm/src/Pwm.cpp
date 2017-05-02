@@ -103,7 +103,7 @@ void Pwm::setUp()
 
 void Pwm::tearDown()
 {
-  ClosePwm();
+//  ClosePwm();
 }
 
 void Pwm::nextContainer(odcore::data::Container &a_container)
@@ -146,6 +146,7 @@ void Pwm::ClosePwm()
   
   if (unexportFile.is_open()) {
     for (auto pin : m_pins) {
+      SetEnabled(pin, 0);
       unexportFile << pin;
       unexportFile.flush();
     }
