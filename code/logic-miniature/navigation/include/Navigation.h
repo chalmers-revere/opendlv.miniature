@@ -50,6 +50,7 @@ class Navigation :
   odcore::base::Mutex m_mutex;
   std::vector<data::environment::Line> m_outerWalls;
   std::vector<data::environment::Line> m_innerWalls;
+  std::vector<data::environment::Point3> m_pointsOfInterest;
   std::map<uint16_t, float> m_analogReadings;
   std::map<uint16_t, bool> m_gpioReadings;
   std::vector<uint16_t> m_gpioOutputPins;

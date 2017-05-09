@@ -25,9 +25,6 @@
 #include <opendavinci/odcore/data/Container.h>
 #include <opendavinci/odcore/strings/StringToolbox.h>
 
-#include <opendlv/data/environment/Line.h>
-#include <opendlv/data/environment/Point3.h>
-
 #include <odvdminiature/GeneratedHeaders_ODVDMiniature.h>
 
 #include "Navigation.h"
@@ -44,6 +41,7 @@ Navigation::Navigation(const int &argc, char **argv)
     , m_mutex()
     , m_outerWalls()
     , m_innerWalls()
+    , m_pointsOfInterest()
     , m_analogReadings()
     , m_gpioReadings()
     , m_gpioOutputPins()
@@ -92,9 +90,10 @@ void Navigation::setUp()
     m_outerWalls.push_back(data::environment::Line(outerWallPoints[2], outerWallPoints[3]));
     m_outerWalls.push_back(data::environment::Line(outerWallPoints[3], outerWallPoints[0]));
 
-    std::cout << "Outer walls - A: " << m_outerWalls[0].toString() << " B: " <<
-      m_outerWalls[1].toString() << " C: " << m_outerWalls[2].toString() << " D: " <<
-      m_outerWalls[2].toString() << std::endl;
+    std::cout << "Outer walls 1 - " << m_outerWalls[0].toString() <<  std::endl;
+    std::cout << "Outer walls 2 - " << m_outerWalls[1].toString() <<  std::endl;
+    std::cout << "Outer walls 3 - " << m_outerWalls[2].toString() <<  std::endl;
+    std::cout << "Outer walls 4 - " << m_outerWalls[3].toString() <<  std::endl;
   } else {
     std::cout << "Warning: Outer walls format error. (" << outerWallsString << ")" << std::endl;
   }
@@ -102,12 +101,19 @@ void Navigation::setUp()
   std::string const innerWallsString = 
       kv.getValue<std::string>("logic-miniature-navigation.inner-walls");
   std::vector<data::environment::Point3> innerWallPoints = ReadPointString(innerWallsString);
-  for (uint32_t i = 0; i << innerWallPoints.size(); i += 2) {
+  for (uint32_t i = 0; i < innerWallPoints.size(); i += 2) {
     if (i < innerWallPoints.size() - 1) {
-      m_innerWalls.push_back(data::environment::Line(innerWallPoints[i], innerWallPoints[i+1]));
-      std::cout << "Inner wall - from: " << innerWallPoints[i].toString() << " to: " <<
-        innerWallPoints[i+1].toString() << std::endl;
+      data::environment::Line innerWall(innerWallPoints[i], innerWallPoints[i+1]);
+      m_innerWalls.push_back(innerWall);
+      std::cout << "Inner wall - " << innerWall.toString() << std::endl;
     }
+  }
+  
+  std::string const pointsOfInterestString = 
+      kv.getValue<std::string>("logic-miniature-navigation.points-of-interest");
+  m_pointsOfInterest = ReadPointString(pointsOfInterestString);
+  for (uint32_t i = 0; i < m_pointsOfInterest.size(); i++) {
+    std::cout << "Point of interest " << i << ": " << m_pointsOfInterest[i].toString() << std::endl;
   }
 }
 
