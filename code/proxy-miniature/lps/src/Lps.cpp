@@ -106,7 +106,7 @@ void Lps::setUp()
   
   
   std::vector<opendlv::model::Cartesian3> needleMarkers;
-  needleMarkers.push_back(origoMarker);
+  // needleMarkers.push_back(origoMarker);
   needleMarkers.push_back(forwardMarker);
   needleMarkers.push_back(leftwardMarker);
 
@@ -124,9 +124,6 @@ void Lps::nextContainer(odcore::data::Container &a_container)
         a_container.getData<opendlv::proxy::QtmFrame>();
     std::vector<opendlv::model::Cartesian3> markers = 
         qtmFrame.getListOfMarkers();
-      if (m_debug) {
-        std::cout << qtmFrame.toString() << std::endl;
-      }
     Search(markers);
     for (opendlv::model::Cartesian3 marker : markers) {
       // std::cout << marker.toString() << std::endl;
@@ -176,12 +173,9 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
 
     opendlv::model::Cartesian3 origoCandidate = a_haystackMarkers[i];
 
-    uint8_t numHits = 0;
-
     uint32_t const needleMarkerCount = m_needleMarkerDistances.size();
     std::vector<float> foundDistances(needleMarkerCount);
     std::vector<int32_t> foundIndices(needleMarkerCount);
-    std::vector<uint32_t> listMatchNumber;
 
     for (uint32_t j = 0; j < needleMarkerCount; j++) {
       foundDistances[j] = std::numeric_limits<float>::max();
@@ -191,7 +185,7 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
     for (uint32_t j = 0; j < needleMarkerCount; j++) {
       float searchedDistance = m_needleMarkerDistances[j];
 
-     std::cout << " SEARCH FOR DISTANCE: " << searchedDistance << std::endl;
+      // std::cout << " SEARCH FOR DISTANCE: " << searchedDistance << std::endl;
 
       for (uint32_t k = 0; k < haystackMarkerCount; k++) {
         if(i == k) {
@@ -205,7 +199,7 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
       
         float distance = sqrt(dx*dx + dy*dy + dz*dz);
 
-        std::cout << "  IS IT: " << dx << " " << dy << " = " << distance << "?" << std::endl;
+        // std::cout << "  IS IT: " << dx << " " << dy << " = " << distance << "?" << std::endl;
 
         if (searchedDistance + m_searchMarginHalf > distance &&
             searchedDistance - m_searchMarginHalf < distance )
@@ -217,8 +211,7 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
           if (currentError < prevError) {
             foundDistances[j] = distance;
             foundIndices[j] = k;
-            numHits++;
-            std::cout << "   YES, " << searchedDistance << " == " << distance << std::endl;
+            // std::cout << "   YES, " << searchedDistance << " == " << distance << std::endl;
           }
         }
       }
@@ -227,12 +220,12 @@ void Lps::Search(std::vector<opendlv::model::Cartesian3> a_haystackMarkers)
       needleMarkers.push_back(origoCandidate);
 
       bool isNeedleFound = true;
-      for (int index : foundIndices) {
+      for (int32_t index : foundIndices) {
         if (index == -1) {
           isNeedleFound = false;
           break;
         }
-        std::cout << "    FOUND CANDIDATE, index = " << index << std::endl;
+        // std::cout << "    FOUND CANDIDATE, index = " << index << std::endl;
         opendlv::model::Cartesian3 candidate = a_haystackMarkers[index];
         needleMarkers.push_back(candidate);
       }

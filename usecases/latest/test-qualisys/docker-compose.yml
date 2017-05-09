@@ -13,7 +13,12 @@ services:
         network_mode: "host"
         command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-qualisys --cid=${CID} --id=1"
 
-    proxy-miniature-lps:
+    proxy-miniature-lps-1:
         build: .
         network_mode: "host"
         command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-lps --cid=${CID} --id=1"
+
+    proxy-miniature-lps-2:
+        build: .
+        network_mode: "host"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-lps --cid=${CID} --id=2"
