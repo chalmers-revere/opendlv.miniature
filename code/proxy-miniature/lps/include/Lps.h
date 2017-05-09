@@ -16,36 +16,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef PROXY_MINIATURE_ANALOG_H
-#define PROXY_MINIATURE_ANALOG_H
+#ifndef PROXY_MINIATURE_LPS_H
+#define PROXY_MINIATURE_LPS_H
 
 #include <memory>
-#include <string>
-#include <utility>
 
-#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/base/module/DataTriggeredConferenceClientModule.h>
+
+#include <odvdopendlvdata/GeneratedHeaders_ODVDOpenDLVData.h>
 
 namespace opendlv {
 namespace proxy {
 namespace miniature {
 
-class Analog : public odcore::base::module::TimeTriggeredConferenceClientModule {
+class Lps : public odcore::base::module::DataTriggeredConferenceClientModule {
    public:
-    Analog(int32_t const &, char **);
-    Analog(Analog const &) = delete;
-    Analog &operator=(Analog const &) = delete;
-    virtual ~Analog();
+    Lps(int32_t const &, char **);
+    Lps(Lps const &) = delete;
+    Lps &operator=(Lps const &) = delete;
+    virtual ~Lps();
 
    private:
     virtual void setUp();
     virtual void tearDown();
-    virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-   
-    std::vector<std::pair<uint16_t, float>> getReadings();
-   
-    float m_conversionConst;
+    virtual void nextContainer(odcore::data::Container &);
+    
+
+    void AnalyseNeedle(std::vector<opendlv::model::Cartesian3>);
+    void Search(std::vector<opendlv::model::Cartesian3>);
+    void FindState(std::vector<opendlv::model::Cartesian3>);
+
+    std::vector<float> m_needleMarkerDistances;
+    float m_needleNormRoll;
+    float m_needleNormPitch;
+    float m_needleNormYaw;
+    float m_searchMarginHalf;
+    int16_t m_frameId;
     bool m_debug;
-    std::vector<uint16_t> m_pins;
+
 };
 
 } 

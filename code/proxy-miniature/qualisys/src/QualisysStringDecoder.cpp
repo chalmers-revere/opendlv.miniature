@@ -16,40 +16,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef PROXY_MINIATURE_ANALOG_H
-#define PROXY_MINIATURE_ANALOG_H
+#include <iostream>
 
-#include <memory>
-#include <string>
-#include <utility>
-
-#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+#include "QualisysStringDecoder.h"
 
 namespace opendlv {
 namespace proxy {
 namespace miniature {
 
-class Analog : public odcore::base::module::TimeTriggeredConferenceClientModule {
-   public:
-    Analog(int32_t const &, char **);
-    Analog(Analog const &) = delete;
-    Analog &operator=(Analog const &) = delete;
-    virtual ~Analog();
+QualisysStringDecoder::QualisysStringDecoder() {}
 
-   private:
-    virtual void setUp();
-    virtual void tearDown();
-    virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-   
-    std::vector<std::pair<uint16_t, float>> getReadings();
-   
-    float m_conversionConst;
-    bool m_debug;
-    std::vector<uint16_t> m_pins;
-};
+QualisysStringDecoder::~QualisysStringDecoder() {}
 
-} 
-}
+void QualisysStringDecoder::nextString(std::string const &a_string) {
+  std::istringstream ss(a_string);
+  std::string msg;
+  std::cout << "[Qualisys] ";
+  while (getline(ss, msg)) {
+    std::cout << msg;
+  }
+  std::cout << std::endl;
+
 }
 
-#endif
+}
+}
+}
