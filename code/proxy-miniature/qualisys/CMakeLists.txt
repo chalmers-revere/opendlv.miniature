@@ -16,7 +16,7 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-PROJECT (opendlv-logic-miniature-navigation)
+PROJECT (opendlv-proxy-miniature-qualisys)
 
 ###########################################################################
 # Set the search path for .cmake files.
@@ -42,7 +42,6 @@ INCLUDE (CheckCxxTestEnvironment)
 ###########################################################################
 # Find OpenDaVINCI.
 FIND_PACKAGE (OpenDaVINCI REQUIRED)
-FIND_PACKAGE (OpenDLV REQUIRED)
 
 ###########################################################################
 # Find ODVDVehicle.
@@ -63,8 +62,15 @@ find_package(ODVDMiniature REQUIRED)
 set(AUTOMOTIVEDATA_DIR "${OPENDAVINCI_DIR}")
 find_package(AutomotiveData REQUIRED)
 
+###########################################################################
+# Find odcantools.
+set(ODCANTOOLS_DIR "${OPENDAVINCI_DIR}")
+find_package(odcantools REQUIRED)
+
 ###############################################################################
-# Set header files from ODVDMiniature.
+# Set header files from ODCANTools.
+INCLUDE_DIRECTORIES (SYSTEM ${ODCANTOOLS_INCLUDE_DIRS})
+# Set header files from miniature.
 INCLUDE_DIRECTORIES (SYSTEM ${ODVDMINIATURE_INCLUDE_DIRS})
 # Set header files from AutomotiveData.
 INCLUDE_DIRECTORIES (SYSTEM ${AUTOMOTIVEDATA_INCLUDE_DIRS})
@@ -74,7 +80,6 @@ INCLUDE_DIRECTORIES (SYSTEM ${ODVDVEHICLE_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES (SYSTEM ${ODVDOPENDLVDATA_INCLUDE_DIRS})
 # Set header files from OpenDaVINCI.
 INCLUDE_DIRECTORIES (SYSTEM ${OPENDAVINCI_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES (SYSTEM ${OPENDLV_INCLUDE_DIRS})
 # Set include directory.
 INCLUDE_DIRECTORIES(include)
 
@@ -85,7 +90,7 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
               ${ODVDOPENDLVDATA_LIBRARIES}
               ${ODVDMINIATURE_LIBRARIES}
               ${AUTOMOTIVEDATA_LIBRARIES}
-              ${OPENDLV_LIBRARIES})
+              ${ODCANTOOLS_LIBRARIES})
 
 ###############################################################################
 # Build this project.
@@ -128,10 +133,10 @@ ENDIF(CXXTEST_FOUND)
 
 ###############################################################################
 # Install this project.
-INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-logic-miniature)
-INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-logic-miniature)
-INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-logic-miniature)
+INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT opendlv-proxy-miniature)
+INSTALL(TARGETS ${PROJECT_NAME}-static DESTINATION lib COMPONENT opendlv-proxy-miniature)
+INSTALL(FILES man/${PROJECT_NAME}.1 DESTINATION man/man1 COMPONENT opendlv-proxy-miniature)
 
 # Install header files.
-INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-logic-miniature COMPONENT opendlv-logic-miniature)
+INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION include/opendlv-proxy-miniature COMPONENT opendlv-proxy-miniature)
 

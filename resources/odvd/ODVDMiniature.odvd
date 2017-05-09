@@ -44,6 +44,20 @@ message opendlv.proxy.AnalogReading [id = 173] {
   float voltage [id = 2];
 }
 
+// TODO: Duplicate, should not be here....
+message opendlv.model.Cartesian3 [id = 151] {
+  float x [id = 1];
+  float y [id = 2];
+  float z [id = 3];
+}
+
+message opendlv.proxy.QtmFrame [id = 190] {
+  list<opendlv.model.Cartesian3> markers [id = 1];
+  odcore::data::TimeStamp timestamp [id = 2];
+  float quality [id = 3];
+  int32 index [id = 4];
+}
+
 message opendlv.proxy.ProximityReading [id = 156] {
   double proximity [id = 1];
 }
