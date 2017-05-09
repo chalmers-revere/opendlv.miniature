@@ -56,4 +56,7 @@ message opendlv.proxy.QtmFrame [id = 190] {
   odcore::data::TimeStamp timestamp [id = 2];
   float quality [id = 3];
   int32 index [id = 4];
+
+message opendlv.proxy.ProximityReading [id = 156] {
+  double proximity [id = 1];
 }

@@ -52,6 +52,7 @@ add_subdirectory(gpio)
 add_subdirectory(qualisys)
 add_subdirectory(lps)
 add_subdirectory(pwm)
+add_subdirectory(sonar-pru)
 
 ###########################################################################
 # Enable CPack to create .deb and .rpm.
