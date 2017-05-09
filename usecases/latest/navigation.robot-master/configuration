@@ -93,3 +93,5 @@ proxy-miniature-pwm.dutyCyclesNs = 1500000,1500000
 
 logic-miniature-navigation.gpio-pins = 31
 logic-miniature-navigation.pwm-pins = 0,1
+logic-miniature-navigation.outer-walls = 50.84,-23.93;-9.48,-24.49;-9.70,5.50;50.54,5.65;
+logic-miniature-navigation.inner-walls = 40.02,5.86;39.76,-6.63;2.88,5.33;2.92,0.57;-9.71,-4.17;-7.45,-4.11;33.06,-24.10;33.08,-19.09;33.08,-19.09;35.50,-19.10;20.74,-17.83;14.24,-7.36;14.24,-7.36;18.59,-4.93;18.59,-4.93;26.08,-6.93;26.08,-6.93;20.74,-17.83;

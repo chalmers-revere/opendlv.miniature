@@ -42,6 +42,7 @@ INCLUDE (CheckCxxTestEnvironment)
 ###########################################################################
 # Find OpenDaVINCI.
 FIND_PACKAGE (OpenDaVINCI REQUIRED)
+FIND_PACKAGE (OpenDLV REQUIRED)
 
 ###########################################################################
 # Find ODVDVehicle.
@@ -73,6 +74,7 @@ INCLUDE_DIRECTORIES (SYSTEM ${ODVDVEHICLE_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES (SYSTEM ${ODVDOPENDLVDATA_INCLUDE_DIRS})
 # Set header files from OpenDaVINCI.
 INCLUDE_DIRECTORIES (SYSTEM ${OPENDAVINCI_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES (SYSTEM ${OPENDLV_INCLUDE_DIRS})
 # Set include directory.
 INCLUDE_DIRECTORIES(include)
 
@@ -82,7 +84,8 @@ set(LIBRARIES ${OPENDAVINCI_LIBRARIES}
               ${ODVDVEHICLE_LIBRARIES}
               ${ODVDOPENDLVDATA_LIBRARIES}
               ${ODVDMINIATURE_LIBRARIES}
-              ${AUTOMOTIVEDATA_LIBRARIES})
+              ${AUTOMOTIVEDATA_LIBRARIES}
+              ${OPENDLV_LIBRARIES})
 
 ###############################################################################
 # Build this project.
