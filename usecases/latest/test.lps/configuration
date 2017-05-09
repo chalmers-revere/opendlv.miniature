@@ -68,31 +68,9 @@ odsupercomponent.pulsetimeack.exclude = odcockpit
 # CONFIGURATION FOR PROXY
 #
 
-proxy-miniature-analog.conversion-constant = 1
-proxy-miniature-analog.debug = 1
-proxy-miniature-analog.pins = 0,1,2,3,4,5,6
-
-proxy-miniature-gpio.debug = 1
-proxy-miniature-gpio.systemPath = /sys/class/gpio
-proxy-miniature-gpio.pins = 30,31
-proxy-miniature-gpio.values = 0,1
-proxy-miniature-gpio.directions = in,out
-
-proxy-miniature-pwm.debug = 1
-proxy-miniature-pwm.systemPath = /sys/class/pwm/pwmchip2
-proxy-miniature-pwm.pins = 0,1
-proxy-miniature-pwm.periodsNs = 20000000,20000000
-proxy-miniature-pwm.dutyCyclesNs = 1500000,1500000
-
-
-###############################################################################
-###############################################################################
-#
-# CONFIGURATION FOR SYSTEM
-#
-
-logic-miniature-navigation.gpio-pins = 31
-logic-miniature-navigation.pwm-pins = 0,1
-logic-miniature-navigation.outer-walls = 50.84,-23.93;-9.48,-24.49;-9.70,5.50;50.54,5.65;
-logic-miniature-navigation.inner-walls = 40.02,5.86;39.76,-6.63;2.88,5.33;2.92,0.57;-9.71,-4.17;-7.45,-4.11;33.06,-24.10;33.08,-19.09;33.08,-19.09;35.50,-19.10;20.74,-17.83;14.24,-7.36;14.24,-7.36;18.59,-4.93;18.59,-4.93;26.08,-6.93;26.08,-6.93;20.74,-17.83;
-logic-miniature-navigation.points-of-interest = 45.84,-18.93;-4.48,-19.49;-4.70,0.50;45.54,0.65;
+proxy-miniature-lps.searchMargin = 0.02
+proxy-miniature-lps.frameId = 0
+proxy-miniature-lps.origoMarker = 0.0,0.0,0.0
+proxy-miniature-lps.forwardMarker = 0.158,0.0,0.0
+proxy-miniature-lps.leftwardMarker = 0.0,0.084,0.0
+proxy-miniature-lps.debug = 1

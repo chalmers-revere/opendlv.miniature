@@ -16,39 +16,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef PROXY_MINIATURE_ANALOG_H
-#define PROXY_MINIATURE_ANALOG_H
+#ifndef PROXY_MINIATURE_QUALISYSPACKETDECODER_H
+#define PROXY_MINIATURE_QUALISYSSTRINGDECODER_H
 
-#include <memory>
-#include <string>
-#include <utility>
-
-#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/io/conference/ContainerConference.h>
+#include <opendavinci/odcore/io/PacketListener.h>
+#include <opendavinci/generated/odcore/data/Packet.h>
 
 namespace opendlv {
 namespace proxy {
 namespace miniature {
+/**
+ * This class decodes udp packets from the Qualisys unit.
+ */
+class QualisysPacketDecoder : public odcore::io::PacketListener {
+   private:
+    QualisysPacketDecoder(QualisysPacketDecoder const &) = delete;
+    QualisysPacketDecoder &operator=(QualisysPacketDecoder const &) = delete;
 
-class Analog : public odcore::base::module::TimeTriggeredConferenceClientModule {
    public:
-    Analog(int32_t const &, char **);
-    Analog(Analog const &) = delete;
-    Analog &operator=(Analog const &) = delete;
-    virtual ~Analog();
+    QualisysPacketDecoder(odcore::io::conference::ContainerConference &, bool);
+    virtual ~QualisysPacketDecoder();
+
 
    private:
-    virtual void setUp();
-    virtual void tearDown();
-    virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-   
-    std::vector<std::pair<uint16_t, float>> getReadings();
-   
-    float m_conversionConst;
+    virtual void nextPacket(odcore::data::Packet const &);
+
+    odcore::io::conference::ContainerConference &m_conference;
     bool m_debug;
-    std::vector<uint16_t> m_pins;
 };
 
-} 
+}
 }
 }
 
