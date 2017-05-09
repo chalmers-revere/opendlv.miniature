@@ -25,6 +25,9 @@
 #include <opendavinci/odcore/data/Container.h>
 #include <opendavinci/odcore/strings/StringToolbox.h>
 
+#include <opendavinci/odcore/wrapper/Eigen.h>
+
+#include <odvdopendlvdata/GeneratedHeaders_ODVDOpenDLVData.h>
 #include <odvdminiature/GeneratedHeaders_ODVDMiniature.h>
 
 #include "Navigation.h"

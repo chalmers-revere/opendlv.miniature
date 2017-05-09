@@ -27,6 +27,7 @@
 
 #include <opendlv/data/environment/Point3.h>
 
+#include <odvdopendlvdata/GeneratedHeaders_ODVDOpenDLVData.h>
 #include <odvdminiature/GeneratedHeaders_ODVDMiniature.h>
 
 #include "Differential.h"
@@ -41,6 +42,10 @@ Differential::Differential(const int &argc, char **argv)
   , m_mutex()
   , m_currentEgoState()
   , m_debug()
+  , m_gpioInA(false)
+  , m_gpioInB(false)
+  , m_gpioInC(false)
+  , m_gpioInD(false)
   , m_deltaTime()
   , m_leftWheelAngularVelocity(0.0)
   , m_rightWheelAngularVelocity(0.0)
@@ -63,9 +68,12 @@ void Differential::nextContainer(odcore::data::Container &a_c)
       std::cout << "[" << getName() << "] Received an SensorBoardData: " 
           << sensorBoardData.toString() << "." << std::endl;
     }
-    ConvertSensorToAnalogReading(sensorBoardData);
+    ConvertBoardDataToSensorReading(sensorBoardData);
   } else if (dataType == opendlv::proxy::ToggleReading::ID()) {
     auto reading = a_c.getData<opendlv::proxy::ToggleReading>();
+    uint16_t pin = reading.getPin();
+    bool state = (reading.getState() == opendlv::proxy::ToggleReading::ToggleState::On);
+    SetMotorControl(pin, state);
     if (m_debug) {
       std::cout << "[" << getName() << "] Received a ToggleReading: "
           << reading.toString() << "." << std::endl;
@@ -76,9 +84,9 @@ void Differential::nextContainer(odcore::data::Container &a_c)
       std::cout << "[" << getName() << "] Received a PwmRequest: "
           << request.toString() << "." << std::endl;
     }
-    uint16_t pin = request.getPin();
+    uint16_t senderStamp = a_c.getSenderStamp();
     uint32_t dutyCycleNs = request.getDutyCycleNs();
-    ConvertPwmToWheelAngularVelocity(pin, dutyCycleNs);
+    ConvertPwmToWheelAngularVelocity(senderStamp, dutyCycleNs);
   }
 }
 
@@ -183,48 +191,59 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode Differential::body()
 
     odcore::data::Container c(egoState);
     getConference().send(c);
+
+    // Simulate LPS.
+    opendlv::model::Cartesian3 lpsPosition(static_cast<float>(posX), static_cast<float>(posY), 0.0f);
+    opendlv::model::Cartesian3 lpsOrientation(0.0f, 0.0f, static_cast<float>(yaw));
+    opendlv::model::State lpsState(lpsPosition, lpsOrientation, 0);
+    odcore::data::Container lpsContainer(lpsState);
+    getConference().send(lpsContainer);
   }
 
   return odcore::data::dmcp::ModuleExitCodeMessage::OKAY;
 }
 
-void Differential::ConvertPwmToWheelAngularVelocity(uint16_t a_pin, 
+void Differential::ConvertPwmToWheelAngularVelocity(uint16_t a_senderStamp, 
     uint32_t a_dutyCycleNs)
 {
-  // NOTE: Do not change this method.
-  int32_t const minReverseDutyCycleNs = 1000000; 
-  int32_t const neutralDutyCycleNs = 1500000; 
-  int32_t const maxForwardDutyCycleNs = 2000000; 
+  int32_t const minDutyCycleNs = 25000; 
+  int32_t const maxDutyCycleNs = 50000; 
 
-  double const minReverseAngularVelocity = -10.0;
-  double const maxForwardAngularVelocity = 10.0;
+  double const maxAngularVelocity = 10.0;
 
-  int32_t dutyCycleNs = (a_dutyCycleNs < minReverseDutyCycleNs || 
-      a_dutyCycleNs > maxForwardDutyCycleNs) 
-    ? neutralDutyCycleNs : a_dutyCycleNs;
+  a_dutyCycleNs = (a_dutyCycleNs < minDutyCycleNs) ? minDutyCycleNs : a_dutyCycleNs; 
+  a_dutyCycleNs = (a_dutyCycleNs > maxDutyCycleNs) ? maxDutyCycleNs : a_dutyCycleNs; 
   
-  double wheelAngularVelocity;
-  if (dutyCycleNs > neutralDutyCycleNs) {
-    wheelAngularVelocity = maxForwardAngularVelocity * 
-      (dutyCycleNs - neutralDutyCycleNs) / 
-      static_cast<double>(maxForwardDutyCycleNs - neutralDutyCycleNs); 
-  } else {
-    wheelAngularVelocity = minReverseAngularVelocity * 
-      (1.0 - (minReverseDutyCycleNs - dutyCycleNs) / 
-      static_cast<double>(minReverseDutyCycleNs - neutralDutyCycleNs));
-  }
+  double wheelAngularVelocity = maxAngularVelocity * 
+    (a_dutyCycleNs - minDutyCycleNs) / 
+    static_cast<double>(maxDutyCycleNs - minDutyCycleNs); 
       
-  if (a_pin == 0) {
-    m_leftWheelAngularVelocity = wheelAngularVelocity;
-  } else if (a_pin == 1) {
-    m_rightWheelAngularVelocity = wheelAngularVelocity;
+  if (a_senderStamp == 1) {
+    if (m_gpioInA && !m_gpioInB) {
+      // Clockwise
+      m_leftWheelAngularVelocity = -wheelAngularVelocity;
+    } else if (!m_gpioInA && m_gpioInB) {
+      // Counter clockwise
+      m_leftWheelAngularVelocity = wheelAngularVelocity;
+    } else {
+      m_leftWheelAngularVelocity = 0.0;
+    }
+  } else if (a_senderStamp == 2) {
+    if (m_gpioInC && !m_gpioInD) {
+      // Clockwise
+      m_rightWheelAngularVelocity = wheelAngularVelocity;
+    } else if (!m_gpioInC && m_gpioInD) {
+      // Counter clockwise
+      m_rightWheelAngularVelocity = -wheelAngularVelocity;
+    } else {
+      m_rightWheelAngularVelocity = 0.0f;
+    }
   }
 }
 
-void Differential::ConvertSensorToAnalogReading(
+void Differential::ConvertBoardDataToSensorReading(
   automotive::miniature::SensorBoardData const &a_sensorBoardData)
 {
-  // NOTE: Do not change this method.
   std::map<uint32_t, double> mapOfDistances = 
       a_sensorBoardData.getMapOfDistances();
  
@@ -240,8 +259,41 @@ void Differential::ConvertSensorToAnalogReading(
     }
 
     opendlv::proxy::AnalogReading analogReading(sensorId, voltage);
-    odcore::data::Container c(analogReading);
-    getConference().send(c);
+    odcore::data::Container analogContainer(analogReading);
+    getConference().send(analogContainer);
+    
+    opendlv::proxy::ProximityReading proximityReading(distance);
+    odcore::data::Container proximityContainer(proximityReading);
+    getConference().send(proximityContainer);
+  }
+}
+
+void Differential::SetMotorControl(uint16_t a_pin, bool a_state)
+{
+  switch (a_pin) {
+    case 30:
+      {
+        m_gpioInB = a_state;
+        break;
+      }
+    case 31:
+      {
+        m_gpioInA = a_state;
+        break;
+      }
+    case 60:
+      {
+        m_gpioInC = a_state;
+        break;
+      }
+    case 51:
+      {
+        m_gpioInD = a_state;
+        break;
+      }
+    default:
+      {
+      }
   }
 }
 

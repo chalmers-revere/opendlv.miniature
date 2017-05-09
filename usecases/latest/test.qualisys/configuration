@@ -68,18 +68,15 @@ odsupercomponent.pulsetimeack.exclude = odcockpit
 # CONFIGURATION FOR PROXY
 #
 
+proxy-miniature-qualisys.debug = 0
+proxy-miniature-qualisys.ip = 192.168.1.2
+proxy-miniature-qualisys.port = 22223
+proxy-miniature-qualisys.client-ip = 192.168.1.31
+proxy-miniature-qualisys.client-port = 30000
 
-proxy-miniature-lps:1.searchMargin = 0.02
-proxy-miniature-lps:1.frameId = 0
-proxy-miniature-lps:1.origoMarker = 0.0,0.0,0.0
-proxy-miniature-lps:1.forwardMarker = 0.198,0.0,0.0
-proxy-miniature-lps:1.leftwardMarker = 0.0,0.097,0.0
-proxy-miniature-lps:1.debug = 1
-
-
-proxy-miniature-lps:2.searchMargin = 0.02
-proxy-miniature-lps:2.frameId = 0
-proxy-miniature-lps:2.origoMarker = 0.0,0.0,0.0
-proxy-miniature-lps:2.forwardMarker = 0.158,0.0,0.0
-proxy-miniature-lps:2.leftwardMarker = 0.0,0.084,0.0
-proxy-miniature-lps:2.debug = 1
+proxy-miniature-lps.searchMargin = 0.02
+proxy-miniature-lps.frameId = 0
+proxy-miniature-lps.origoMarker = 0.0,0.0,0.0
+proxy-miniature-lps.forwardMarker = 0.158,0.0,0.0
+proxy-miniature-lps.leftwardMarker = 0.0,0.084,0.0
+proxy-miniature-lps.debug = 1
