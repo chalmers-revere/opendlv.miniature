@@ -13,12 +13,18 @@ services:
         network_mode: "host"
         command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-qualisys --cid=${CID} --id=1"
 
-    proxy-miniature-lps-1:
-        build: .
-        network_mode: "host"
-        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-lps --cid=${CID} --id=1"
+    # proxy-miniature-lps-1:
+    #     build: .
+    #     network_mode: "host"
+    #     command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-lps --cid=${CID} --id=1"
 
-    proxy-miniature-lps-2:
-        build: .
-        network_mode: "host"
-        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-lps --cid=${CID} --id=2"
+    # proxy-miniature-lps-2:
+    #     build: .
+    #     network_mode: "host"
+    #     command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-lps --cid=${CID} --id=2"
+    
+    # odredirector:
+    #     build: .
+    #     restart: always
+    #     network_mode: "host"
+    #     command: "/opt/od4/bin/odredirector --cid=111 --tostdout=1 | /opt/od4/bin/odredirector --cid=222 --fromstdin=1"
