@@ -297,11 +297,11 @@ void Lps::FindState(std::vector<opendlv::model::Cartesian3> a_needleMarkers)
 //  std::cout << "  yaw norm " << yaw_norm << " total yaw " << yaw_tot << " yaw mean " << yaw_mean << " final yaw " << yaw << std::endl;
 
   // For TME290, convert to decimeters
-  x0 *= 10.0f;
-  y0 *= 10.0f;
-  z0 *= 10.0f;
+  float const x0Scaled = x0 * 10.0f;
+  float const y0Scaled = y0 * 10.0f;
+  float const z0Scaled = z0 * 10.0f;
 
-  opendlv::model::Cartesian3 position(x0, y0, z0);
+  opendlv::model::Cartesian3 position(x0Scaled, y0Scaled, z0Scaled);
   opendlv::model::Cartesian3 angularDisplacement(roll, pitch, yaw);
   opendlv::model::State state(position, angularDisplacement, m_frameId);
   if (m_debug) {
