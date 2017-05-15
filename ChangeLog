@@ -1,3 +1,4 @@
+0.2.2 - Bugfix in simulation
 0.2.1 - Scaling for TME290
 0.2.0 - Added maps, changed simulation, and support for LPS localization.
 0.1.9 - Removed cleaning of PWM
