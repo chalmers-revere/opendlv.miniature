@@ -16,39 +16,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef PROXY_MINIATURE_ANALOG_H
-#define PROXY_MINIATURE_ANALOG_H
+#ifndef PROXY_MINIATURE_QUALISYSSTRINGDECODER_H
+#define PROXY_MINIATURE_QUALISYSSTRINGDECODER_H
 
-#include <memory>
+#include <sstream>
 #include <string>
-#include <utility>
 
-#include <opendavinci/odcore/base/module/TimeTriggeredConferenceClientModule.h>
+#include <opendavinci/odcore/io/StringListener.h>
+#include <opendavinci/odcore/io/conference/ContainerConference.h>
 
 namespace opendlv {
 namespace proxy {
 namespace miniature {
-
-class Analog : public odcore::base::module::TimeTriggeredConferenceClientModule {
-   public:
-    Analog(int32_t const &, char **);
-    Analog(Analog const &) = delete;
-    Analog &operator=(Analog const &) = delete;
-    virtual ~Analog();
-
+/**
+ * This class decodes data from the Qualisys unit.
+ */
+class QualisysStringDecoder : public odcore::io::StringListener {
    private:
-    virtual void setUp();
-    virtual void tearDown();
-    virtual odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
-   
-    std::vector<std::pair<uint16_t, float>> getReadings();
-   
-    float m_conversionConst;
-    bool m_debug;
-    std::vector<uint16_t> m_pins;
+    QualisysStringDecoder(QualisysStringDecoder const &) = delete;
+    QualisysStringDecoder &operator=(QualisysStringDecoder const &) = delete;
+
+   public:
+    QualisysStringDecoder();
+    virtual ~QualisysStringDecoder();
+
+    virtual void nextString(const std::string &s);
+
+   // private:
 };
 
-} 
+}
 }
 }
 

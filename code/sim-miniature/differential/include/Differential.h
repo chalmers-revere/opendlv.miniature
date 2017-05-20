@@ -47,12 +47,17 @@ class Differential :
   virtual void tearDown();
   odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode body();
   void ConvertPwmToWheelAngularVelocity(uint16_t, uint32_t);
-  void ConvertSensorToAnalogReading(
+  void ConvertBoardDataToSensorReading(
     automotive::miniature::SensorBoardData const &);
+  void SetMotorControl(uint16_t, bool);
 
   odcore::base::Mutex m_mutex;
   opendlv::data::environment::EgoState m_currentEgoState;
   bool m_debug;
+  bool m_gpioInA;
+  bool m_gpioInB;
+  bool m_gpioInC;
+  bool m_gpioInD;
   double m_deltaTime;
   double m_leftWheelAngularVelocity;
   double m_rightWheelAngularVelocity;

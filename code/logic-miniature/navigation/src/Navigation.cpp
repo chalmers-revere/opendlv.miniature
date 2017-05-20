@@ -25,6 +25,9 @@
 #include <opendavinci/odcore/data/Container.h>
 #include <opendavinci/odcore/strings/StringToolbox.h>
 
+#include <opendavinci/odcore/wrapper/Eigen.h>
+
+#include <odvdopendlvdata/GeneratedHeaders_ODVDOpenDLVData.h>
 #include <odvdminiature/GeneratedHeaders_ODVDMiniature.h>
 
 #include "Navigation.h"
@@ -39,6 +42,9 @@ namespace miniature {
 Navigation::Navigation(const int &argc, char **argv)
     : TimeTriggeredConferenceClientModule(argc, argv, "logic-miniature-navigation")
     , m_mutex()
+    , m_outerWalls()
+    , m_innerWalls()
+    , m_pointsOfInterest()
     , m_analogReadings()
     , m_gpioReadings()
     , m_gpioOutputPins()
@@ -76,6 +82,41 @@ void Navigation::setUp()
       odcore::strings::StringToolbox::split(pwmPinsString, ',');
   for (auto pin : pwmPinsVector) {
     m_pwmOutputPins.push_back(std::stoi(pin));
+  }
+  
+  std::string const outerWallsString = 
+      kv.getValue<std::string>("logic-miniature-navigation.outer-walls");
+  std::vector<data::environment::Point3> outerWallPoints = ReadPointString(outerWallsString);
+  if (outerWallPoints.size() == 4) {
+    m_outerWalls.push_back(data::environment::Line(outerWallPoints[0], outerWallPoints[1]));
+    m_outerWalls.push_back(data::environment::Line(outerWallPoints[1], outerWallPoints[2]));
+    m_outerWalls.push_back(data::environment::Line(outerWallPoints[2], outerWallPoints[3]));
+    m_outerWalls.push_back(data::environment::Line(outerWallPoints[3], outerWallPoints[0]));
+
+    std::cout << "Outer walls 1 - " << m_outerWalls[0].toString() <<  std::endl;
+    std::cout << "Outer walls 2 - " << m_outerWalls[1].toString() <<  std::endl;
+    std::cout << "Outer walls 3 - " << m_outerWalls[2].toString() <<  std::endl;
+    std::cout << "Outer walls 4 - " << m_outerWalls[3].toString() <<  std::endl;
+  } else {
+    std::cout << "Warning: Outer walls format error. (" << outerWallsString << ")" << std::endl;
+  }
+  
+  std::string const innerWallsString = 
+      kv.getValue<std::string>("logic-miniature-navigation.inner-walls");
+  std::vector<data::environment::Point3> innerWallPoints = ReadPointString(innerWallsString);
+  for (uint32_t i = 0; i < innerWallPoints.size(); i += 2) {
+    if (i < innerWallPoints.size() - 1) {
+      data::environment::Line innerWall(innerWallPoints[i], innerWallPoints[i+1]);
+      m_innerWalls.push_back(innerWall);
+      std::cout << "Inner wall - " << innerWall.toString() << std::endl;
+    }
+  }
+  
+  std::string const pointsOfInterestString = 
+      kv.getValue<std::string>("logic-miniature-navigation.points-of-interest");
+  m_pointsOfInterest = ReadPointString(pointsOfInterestString);
+  for (uint32_t i = 0; i < m_pointsOfInterest.size(); i++) {
+    std::cout << "Point of interest " << i << ": " << m_pointsOfInterest[i].toString() << std::endl;
   }
 }
 
@@ -194,6 +235,24 @@ void Navigation::nextContainer(odcore::data::Container &a_c)
     std::cout << "[" << getName() << "] Received a ToggleReading: "
         << reading.toString() << "." << std::endl;
   }
+}
+
+std::vector<data::environment::Point3> Navigation::ReadPointString(std::string const &a_pointsString) const
+{
+  std::vector<data::environment::Point3> points;
+  std::vector<std::string> pointStringVector = 
+      odcore::strings::StringToolbox::split(a_pointsString, ';');
+  for (auto pointString : pointStringVector) {
+    std::vector<std::string> coordinateVector = 
+        odcore::strings::StringToolbox::split(pointString, ',');
+    if (coordinateVector.size() == 2) {
+      double x = std::stod(coordinateVector[0]);
+      double y = std::stod(coordinateVector[1]);
+      double z = 0.0;
+      points.push_back(data::environment::Point3(x, y, z));
+    }
+  }
+  return points;
 }
 
 }
