@@ -1,0 +1,17 @@
+version: '2'
+services:
+    odsupercomponent:
+        image: ${IMAGE}
+        network_mode: "host"
+        volumes:
+        - .:/opt/miniature.data
+        command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/miniature.data/configuration"
+
+    # micro service for PS3 controller.
+    proxy-miniature-ps3controller:
+        image: ${IMAGE}
+        network_mode: "host"
+        devices:
+        - "/dev/input/js0:/dev/input/js0"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-ps3controller --cid=${CID} --freq=10 --verbose=1"
+
