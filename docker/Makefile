@@ -20,7 +20,13 @@
 # For example, seresearch/base is a generic name to the base image to be used
 # that, for example, could point to seresearch/ubuntu
 REPOSITORY=seresearch
-IMAGE=opendlv-on-opendlv-core-on-opendavinci-on-base
+PRE_IMAGE=opendlv-on-opendlv-core-on-opendavinci-on-base
+UNAME_M:=$(shell uname -m)
+ifeq ($(UNAME_M),armv7l)
+	IMAGE=$(addsuffix -armhf,$(PRE_IMAGE))
+else
+	IMAGE=$(PRE_IMAGE)
+endif
 BASE_IMAGE=$(REPOSITORY)/$(IMAGE)
 BASE_IMAGE_VERSION=v0.7.4
 BASE_IMAGE_DEV_SUFFIX=-dev
