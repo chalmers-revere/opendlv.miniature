@@ -53,13 +53,7 @@ float Motor::getPower()
 
 void Motor::setPower(float const a_val)
 {
-  if (a_val > 0.0f && a_val < 1.0f) {
-    m_power = a_val;
-  } else if (a_val > 1.0f) {
-    m_power = 1.0f;
-  } else if (a_val < -1.0f) {
-    m_power = -1.0f;
-  }
+  m_power = a_val;
 }
 
 std::string Motor::toString() 

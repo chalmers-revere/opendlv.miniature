@@ -180,6 +180,8 @@ void PwmMotor::nextContainer(odcore::data::Container &a_container)
     } else if (a_container.getSenderStamp() == 2) {
       power = -ppr.getPercent();
     }
+    power += 100;
+    power *= 0.5f;
     setMotorPower("propulsion", power);
   }
   // else if (a_container.getDataType() == 
@@ -210,7 +212,7 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode PwmMotor::body()
       odcore::data::dmcp::ModuleStateMessage::RUNNING) {
     actuate();
 
-    if (counter%50 == 0 && isVerbose()) {
+    if (counter%5 == 0) {
       std::cout << "[" << getName() << "]" << std::endl;
       for (uint8_t i = 0; i < m_motor.size(); ++i) {
         std::cout << "\t" << m_motor[i].toString() << std::endl;
