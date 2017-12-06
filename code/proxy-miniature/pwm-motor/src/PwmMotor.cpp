@@ -180,7 +180,7 @@ void PwmMotor::nextContainer(odcore::data::Container &a_container)
     } else if (a_container.getSenderStamp() == 2) {
       power = -ppr.getPercent();
     }
-    power += 100;
+    power += 1;
     power *= 0.5f;
     setMotorPower("propulsion", power);
   }
