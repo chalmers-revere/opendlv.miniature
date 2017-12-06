@@ -227,7 +227,16 @@ void PwmMotor::actuate()
 {
   for (uint8_t i = 0; i < m_motor.size(); ++i) {
     odcore::base::Lock l(m_mutex);
-    setEscNormalized(m_motor.at(i).getChannel(), m_motor.at(i).getPower());
+    switch (m_motor.at(i).getType()) {
+      case Motor::MotorType::Esc:
+        setEscNormalized(m_motor.at(i).getChannel(), m_motor.at(i).getPower());
+        break;
+      case Motor::MotorType::Servo:
+        setServoNormalized(m_motor.at(i).getChannel(), m_motor.at(i).getPower());
+        break;
+      default:
+        break;
+    }
   }
 }
 
