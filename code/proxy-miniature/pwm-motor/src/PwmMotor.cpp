@@ -212,7 +212,7 @@ odcore::data::dmcp::ModuleExitCodeMessage::ModuleExitCode PwmMotor::body()
       odcore::data::dmcp::ModuleStateMessage::RUNNING) {
     actuate();
 
-    if (counter%5 == 0) {
+    if (counter%5 == 0 && isVerbose()) {
       std::cout << "[" << getName() << "]" << std::endl;
       for (uint8_t i = 0; i < m_motor.size(); ++i) {
         std::cout << "\t" << m_motor[i].toString() << std::endl;
