@@ -53,7 +53,7 @@ add_subdirectory(qualisys)
 add_subdirectory(lps)
 add_subdirectory(pwm)
 add_subdirectory(pwm-motor)
-add_subdirectory(sonar-pru)
+#add_subdirectory(sonar-pru)
 add_subdirectory(ps3controller)
 
 ###########################################################################
