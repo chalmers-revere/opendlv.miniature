@@ -178,10 +178,10 @@ void Ps3Controller::updateReq()
   m_gsteerReq.setSteeringAngle(-m_axes[0] / MAX_AXES_VALUE * MAX_STEERING_ANGLE * static_cast<float>(M_PI) / 180.0f);
 
   if(m_axes[3] < 0) {
-    m_gasPedal.setPercent(-m_axes[3] / MAX_AXES_VALUE * 0.25f);
+    m_gasPedal.setPercent(-m_axes[3] / MAX_AXES_VALUE * 0.5f);
     m_reversePedal.setPercent(0);
   } else if (m_axes[3] >= 0) {
-    m_reversePedal.setPercent(m_axes[3] / MAX_AXES_VALUE * 0.25f);
+    m_reversePedal.setPercent(m_axes[3] / MAX_AXES_VALUE * 0.5f);
     m_gasPedal.setPercent(0);
   }
 }
