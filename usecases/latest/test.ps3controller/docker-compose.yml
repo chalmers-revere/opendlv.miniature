@@ -23,6 +23,7 @@ services:
     odsupercomponent:
         image: ${IMAGE_ARM}
         network_mode: "host"
+        restart: always
         volumes:
         - .:/opt/miniature.data
         command: "/opt/od4/bin/odsupercomponent --cid=${CID} --verbose=1 --configuration=/opt/miniature.data/configuration"
@@ -31,6 +32,7 @@ services:
     proxy-miniature-ps3controller:
         image: ${IMAGE_ARM}
         network_mode: "host"
+        restart: always
         devices:
         - "/dev/input/js0:/dev/input/js0"
         command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-ps3controller --cid=${CID} --freq=10"
@@ -38,6 +40,7 @@ services:
     proxy-miniature-pwm-motor:
         image: ${IMAGE_ARM}
         network_mode: "host"
+        restart: always
         privileged: true
         volumes:
         - /sys/:/sys/
