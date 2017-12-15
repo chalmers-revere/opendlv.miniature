@@ -181,7 +181,7 @@ void Ps3Controller::updateReq()
     m_gasPedal.setPercent(-m_axes[3] / MAX_AXES_VALUE * 0.5f);
     m_reversePedal.setPercent(0);
   } else if (m_axes[3] >= 0) {
-    m_reversePedal.setPercent(m_axes[3] / MAX_AXES_VALUE * 0.5f);
+    m_reversePedal.setPercent(m_axes[3] / MAX_AXES_VALUE * 1.0f);
     m_gasPedal.setPercent(0);
   }
 }
