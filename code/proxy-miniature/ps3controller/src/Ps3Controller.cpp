@@ -173,7 +173,7 @@ void Ps3Controller::updateReq()
   // for (int32_t i = 0; i < m_numButtons; ++i) {
   //   std::cout << "Button: " << i << ", Value: " << m_buttons[i] << std::endl;
   // }
-  float const MAX_STEERING_ANGLE = 32.0f;
+  float const MAX_STEERING_ANGLE = 38.0f;
 
   m_gsteerReq.setSteeringAngle(-m_axes[0] / MAX_AXES_VALUE * MAX_STEERING_ANGLE * static_cast<float>(M_PI) / 180.0f);
 

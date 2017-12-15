@@ -161,7 +161,7 @@ void PwmMotor::nextContainer(odcore::data::Container &a_container)
   if (a_container.getDataType() == opendlv::proxy::GroundSteeringRequest::ID()) {
     opendlv::proxy::GroundSteeringRequest gsr = 
         a_container.getData<opendlv::proxy::GroundSteeringRequest>();
-    float const MAX_STEERING_ANGLE = 32.0f;
+    float const MAX_STEERING_ANGLE = 38.0f;
     float const MAX_ANGLE = 90.0f;
     float angle = gsr.getSteeringAngle() * 180 / static_cast<float>(M_PI);
     if (angle > MAX_STEERING_ANGLE) {
