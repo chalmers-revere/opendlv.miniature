@@ -99,8 +99,8 @@ private:
     opendlv::proxy::GroundSteeringRequest m_gsteerReq;
     opendlv::proxy::PedalPositionReading m_accelerationReq;
 
-    float m_ACCELERATION_MIN = 0;
-    float m_ACCELERATION_MAX = 0;
+    float m_MAX_ACCELERATION = 0;
+    float m_MAX_DECELERATION = 0;
     float m_MAX_STEERING_ANGLE = 0;
 };
 
