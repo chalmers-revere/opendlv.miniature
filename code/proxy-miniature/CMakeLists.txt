@@ -55,6 +55,7 @@ add_subdirectory(pwm)
 add_subdirectory(pwm-motor)
 #add_subdirectory(sonar-pru)
 add_subdirectory(ps3controller)
+add_subdirectory(ps4controller)
 
 ###########################################################################
 # Enable CPack to create .deb and .rpm.

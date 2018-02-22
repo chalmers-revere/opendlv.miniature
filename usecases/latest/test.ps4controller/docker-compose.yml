@@ -35,7 +35,7 @@ services:
         restart: always
         devices:
         - "/dev/input/js0:/dev/input/js0"
-        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-ps4controller --cid=${CID} --freq=10"
+        command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-ps4controller --cid=${CID} --freq=10 --verbose=1"
 
     proxy-miniature-pwm-motor:
         image: ${IMAGE_ARM}
