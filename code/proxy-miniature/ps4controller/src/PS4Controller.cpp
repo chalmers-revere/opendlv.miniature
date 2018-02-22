@@ -1,6 +1,6 @@
 /**
  * ps4controller - Using a Ps4 controller to accelerate, brake, and steer a miniature vehicle
- * Copyright (C) 2017 Chalmers Revere
+ * Copyright (C) 2017 Chalmers
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -46,8 +46,7 @@ PS4Controller::PS4Controller(const int32_t &argc, char **argv)
     , m_latestJsNumber(0)
     , m_latestJsValue(0)
     , m_gsteerReq(0)
-    , m_gasPedal(0)
-    , m_reversePedal(0)
+    , m_accelerationReq(0)
 {}
 
 PS4Controller::~PS4Controller() {}
@@ -59,19 +58,13 @@ void PS4Controller::setUp() {
 
     std::cout << "[" << getName() << "] Trying to open ps4controller " << PS4CONTROLLER_DEVICE_NODE << std::endl;
     
-    string const ACC_MIN = getKeyValueConfiguration().getValue<string>(getName() + ".acceleration.min");
+    string const ACC_MIN = getKeyValueConfiguration().getValue<string>(getName() + ".deceleration.max");
     string const ACC_MAX = getKeyValueConfiguration().getValue<string>(getName() + ".acceleration.max");
     string const MAX_STE = getKeyValueConfiguration().getValue<string>(getName() + ".steering.max");
 
-    m_ACCELERATION_MIN=std::stod(ACC_MIN,NULL);
-    m_ACCELERATION_MAX=std::stod(ACC_MAX,NULL);
-    m_MAX_STEERING_ANGLE=std::stod(MAX_STE,NULL);
-
-    //cerr<<"Parameters set: max ste "<<m_MAX_STEERING_ANGLE<<" acc min "<<m_ACCELERATION_MIN<<" acc max "<<m_ACCELERATION_MAX<<std::endl;
-    //m_MAX_STEERING_ANGLE = 38.0f;
-    //m_ACCELERATION_MIN = 1.0f;
-    //m_ACCELERATION_MAX = 0.25f;
-
+    m_MAX_DECELERATION = std::stod(ACC_MIN,NULL);
+    m_MAX_ACCELERATION = std::stod(ACC_MAX,NULL);
+    m_MAX_STEERING_ANGLE = std::stod(MAX_STE,NULL);
 
     // Setup ps4controller control.
     #if !defined(WIN32) && !defined(__gnu_hurd__) && !defined(__APPLE__)
@@ -112,8 +105,7 @@ void PS4Controller::tearDown() {
     // Deactivate ps4controller control.
     close(m_ps4controllerDevice);
     m_gsteerReq.setSteeringAngle(0);
-    m_gasPedal.setPercent(0);
-    m_reversePedal.setPercent(0);
+    m_accelerationReq.setPercent(0);
     sendRequest();
 }
 
@@ -174,42 +166,34 @@ void PS4Controller::prepareRequest()
     //   std::cout << "Button: " << i << ", Value: " << m_buttons[i] << std::endl;
     // }
     cerr << " L "<<m_axes[0]<<" R "<<m_axes[5] << std::endl;
-    // steering - LEFT ANALOG STICK X
+    // steering - LEFT ANALOG STICK X - positive to the right, negative to the left
     m_gsteerReq.setSteeringAngle(-m_axes[0] / MAX_AXES_VALUE * m_MAX_STEERING_ANGLE * static_cast<float>(M_PI) / 180.0f);
 
-    m_gasPedal.setPercent(0);
-    m_reversePedal.setPercent(0);
-    // acceleration - RIGHT ANALOG STICK Y
-    if(m_axes[5] < 0) { 
-        m_gasPedal.setPercent(-m_axes[5] / MAX_AXES_VALUE * 0.25f);
-    } else if (m_axes[5] >= 0) {
-        m_reversePedal.setPercent(m_axes[5] / MAX_AXES_VALUE * 1.0f);
+    float percent=0.0f;
+    // propulsion - RIGHT ANALOG STICK Y - negative up, positive down
+    if(m_axes[5] < 0) { // user is accelerating
+        percent = -m_axes[5] / MAX_AXES_VALUE * m_MAX_ACCELERATION; // final value should be positive
+    } else if (m_axes[5] >= 0) { // user is decelerating
+        percent = m_axes[5] / MAX_AXES_VALUE * m_MAX_DECELERATION; // final value should be negative
     }
+    m_accelerationReq.setPercent(percent);
 }
 
 void PS4Controller::sendRequest()
 {
-    odcore::data::Container cgsr(m_gsteerReq);
-    getConference().send(cgsr);
+    odcore::data::Container sr(m_gsteerReq);
+    getConference().send(sr);
 
-    if (m_reversePedal.getPercent() > 0) {
-        odcore::data::Container crp(m_reversePedal);
-        crp.setSenderStamp(2);
-        getConference().send(crp);
-    } else {
-        odcore::data::Container cgp(m_gasPedal);
-        cgp.setSenderStamp(1);
-        getConference().send(cgp);
+    odcore::data::Container ar(m_accelerationReq);
+    getConference().send(ar);
+
+    if (isVerbose()) {
+//        std::cout << "m_latestJsNumber: " << m_latestJsNumber << std::endl;
+//        std::cout << "m_latestJsValue: " << m_latestJsValue << std::endl;
+        std::cout << "Sending: "<< std::endl
+        << m_gsteerReq.toString() << std::endl
+        << m_accelerationReq.toString() << std::endl;
     }
-
-    //if (isVerbose()) {
-    // std::cout << "m_latestJsNumber: " << m_latestJsNumber << std::endl;
-    // std::cout << "m_latestJsValue: " << m_latestJsValue << std::endl;
-    std::cout << "Sending: "<< std::endl
-    << m_gsteerReq.toString() << std::endl
-    << m_gasPedal.toString() << std::endl
-    << m_reversePedal.toString() << std::endl;
-    //}
 }
 
 

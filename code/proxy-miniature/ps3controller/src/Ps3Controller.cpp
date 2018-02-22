@@ -49,8 +49,7 @@ Ps3Controller::Ps3Controller(const int32_t &argc, char **argv)
     , m_latestJsNumber(0)
     , m_latestJsValue(0)
     , m_gsteerReq(0)
-    , m_gasPedal(0)
-    , m_reversePedal(0)
+    , m_accelerationReq(0)
 {}
 
 Ps3Controller::~Ps3Controller() {}
@@ -104,8 +103,7 @@ void Ps3Controller::tearDown() {
   // Deactivate ps3controller control.
   close(m_ps3controllerDevice);
   m_gsteerReq.setSteeringAngle(0);
-  m_gasPedal.setPercent(0);
-  m_reversePedal.setPercent(0);
+  m_accelerationReq.setPercent(0);
   sendReq();
 }
 
@@ -178,11 +176,9 @@ void Ps3Controller::updateReq()
   m_gsteerReq.setSteeringAngle(-m_axes[0] / MAX_AXES_VALUE * MAX_STEERING_ANGLE * static_cast<float>(M_PI) / 180.0f);
 
   if(m_axes[3] < 0) {
-    m_gasPedal.setPercent(-m_axes[3] / MAX_AXES_VALUE * 0.5f);
-    m_reversePedal.setPercent(0);
+    m_accelerationReq.setPercent(-m_axes[3] / MAX_AXES_VALUE * 0.5f);
   } else if (m_axes[3] >= 0) {
-    m_reversePedal.setPercent(m_axes[3] / MAX_AXES_VALUE * 1.0f);
-    m_gasPedal.setPercent(0);
+    m_accelerationReq.setPercent(m_axes[3] / MAX_AXES_VALUE * 1.0f);
   }
 }
 
@@ -191,22 +187,15 @@ void Ps3Controller::sendReq()
   odcore::data::Container cgsr(m_gsteerReq);
   getConference().send(cgsr);
 
-  if (m_reversePedal.getPercent() > 0) {
-    odcore::data::Container crp(m_reversePedal);
-    crp.setSenderStamp(2);
-    getConference().send(crp);
-  } else {
-    odcore::data::Container cgp(m_gasPedal);
-    cgp.setSenderStamp(1);
-    getConference().send(cgp);
-  }
+  odcore::data::Container ar(m_accelerationReq);
+  getConference().send(ar);
+  
   if (isVerbose()) {
     // std::cout << "m_latestJsNumber: " << m_latestJsNumber << std::endl;
     // std::cout << "m_latestJsValue: " << m_latestJsValue << std::endl;
     std::cout << "Sending: "<< std::endl
         << m_gsteerReq.toString() << std::endl
-        << m_gasPedal.toString() << std::endl
-        << m_reversePedal.toString() << std::endl;
+        << m_accelerationReq.toString() << std::endl;
   }
 }
 

@@ -19,7 +19,7 @@ odcockpit.directoriesForSharedLibaries = /opt/opendlv.miniature
 #
 
 proxy-miniature-ps4controller.ps4controllerdevicenode = /dev/input/js0   # Gamepad.
-proxy-miniature-ps4controller.acceleration.min = 1.0
+proxy-miniature-ps4controller.deceleration.max = -1.0
 proxy-miniature-ps4controller.acceleration.max = 0.25
 proxy-miniature-ps4controller.steering.max = 38.0
 

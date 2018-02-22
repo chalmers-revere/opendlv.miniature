@@ -102,8 +102,7 @@ private:
   int32_t m_latestJsNumber;
   int32_t m_latestJsValue;
   opendlv::proxy::GroundSteeringRequest m_gsteerReq;
-  opendlv::proxy::PedalPositionReading m_gasPedal;
-  opendlv::proxy::PedalPositionReading m_reversePedal;
+  opendlv::proxy::PedalPositionReading m_accelerationReq;
 };
 
 }

@@ -175,11 +175,8 @@ void PwmMotor::nextContainer(odcore::data::Container &a_container)
     opendlv::proxy::PedalPositionReading ppr = 
         a_container.getData<opendlv::proxy::PedalPositionReading>();
     float power;
-    if(a_container.getSenderStamp() == 1) {
-      power = ppr.getPercent();
-    } else if (a_container.getSenderStamp() == 2) {
-      power = -ppr.getPercent();
-    }
+    power = ppr.getPercent();
+
     power += 1;
     power *= 0.5f;
     setMotorPower("propulsion", power);
