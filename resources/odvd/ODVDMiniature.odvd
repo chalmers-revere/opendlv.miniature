@@ -62,10 +62,10 @@ message opendlv.proxy.ProximityReading [id = 156] {
   double proximity [id = 1];
 }
 
-message opendlv.proxy.GroundSteeringRequest [id = 1000] {
+message opendlv.proxy.GroundSteeringReading [id = 1045] {
   float steeringAngle [id = 1];
 }
 
-message opendlv.proxy.PedalPositionReading [id = 1001] {
+message opendlv.proxy.PedalPositionReading [id = 1041] {
   float percent [id = 1];
 }
