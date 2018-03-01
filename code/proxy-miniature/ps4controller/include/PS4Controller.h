@@ -96,7 +96,7 @@ private:
     int32_t m_latestJsNumber;
     int32_t m_latestJsValue;
     
-    opendlv::proxy::GroundSteeringRequest m_gsteerReq;
+    opendlv::proxy::GroundSteeringReading m_gsteerReq;
     opendlv::proxy::PedalPositionReading m_accelerationReq;
 
     float m_MAX_ACCELERATION = 0;

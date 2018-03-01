@@ -158,9 +158,9 @@ void PwmMotor::tearDown()
 void PwmMotor::nextContainer(odcore::data::Container &a_container)
 {
   // (void) a_container;
-  if (a_container.getDataType() == opendlv::proxy::GroundSteeringRequest::ID()) {
-    opendlv::proxy::GroundSteeringRequest gsr = 
-        a_container.getData<opendlv::proxy::GroundSteeringRequest>();
+  if (a_container.getDataType() == opendlv::proxy::GroundSteeringReading::ID()) {
+    opendlv::proxy::GroundSteeringReading gsr = 
+        a_container.getData<opendlv::proxy::GroundSteeringReading>();
     float const MAX_STEERING_ANGLE = 38.0f;
     float const MAX_ANGLE = 90.0f;
     float angle = gsr.getSteeringAngle() * 180 / static_cast<float>(M_PI);

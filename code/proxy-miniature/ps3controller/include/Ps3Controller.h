@@ -101,7 +101,7 @@ private:
   int16_t m_numButtons;
   int32_t m_latestJsNumber;
   int32_t m_latestJsValue;
-  opendlv::proxy::GroundSteeringRequest m_gsteerReq;
+  opendlv::proxy::GroundSteeringReading m_gsteerReq;
   opendlv::proxy::PedalPositionReading m_accelerationReq;
 };
 
