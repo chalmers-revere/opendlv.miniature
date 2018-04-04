@@ -1,1 +1,1 @@
-IMAGE_ARM=seresearch/miniature-on-opendlv-on-opendlv-core-on-opendavinci-on-base-armhf-dev:v0.3.4
+IMAGE_ARM=seresearch/2018-dit-168-dev:v0.3.5-armhf
