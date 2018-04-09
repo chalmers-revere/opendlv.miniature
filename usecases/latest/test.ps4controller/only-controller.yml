@@ -1,7 +1,7 @@
 version: '2'
 services:
     odsupercomponent:
-        image: ${IMAGE}
+        image: ${IMAGE_ARM}
         network_mode: "host"
         volumes:
         - .:/opt/miniature.data
@@ -9,7 +9,7 @@ services:
 
     # micro service for PS3 controller.
     proxy-miniature-ps3controller:
-        image: ${IMAGE}
+        image: ${IMAGE_ARM}
         network_mode: "host"
         devices:
         - "/dev/input/js0:/dev/input/js0"

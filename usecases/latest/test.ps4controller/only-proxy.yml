@@ -21,7 +21,7 @@ version: '2'
 
 services:
     proxy-miniature-pwm-motor:
-       build: .
+       image: ${IMAGE_ARM}
        network_mode: "host"
        restart: always
        privileged: true
