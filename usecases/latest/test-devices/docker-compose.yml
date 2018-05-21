@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+    device-ultrasonic-srf08-front:
+        image: chalmersrevere/opendlv-device-ultrasonic-srf08-armhf:v0.0.9
+        network_mode: "host"
+        privileged: true
+        volumes:
+          - /dev/i2c-1:/dev/i2c-1
+        command: "/usr/bin/opendlv-device-ultrasonic-srf08 --dev=/dev/i2c-1 --bus-address=112 --cid=111 --freq=5 --id=0"
+    
+    device-ultrasonic-srf08-rear:
+        image: chalmersrevere/opendlv-device-ultrasonic-srf08-armhf:v0.0.9
+        network_mode: "host"
+        privileged: true
+        volumes:
+          - /dev/i2c-1:/dev/i2c-1
+        command: "/usr/bin/opendlv-device-ultrasonic-srf08 --dev=/dev/i2c-1 --bus-address=113 --cid=111 --freq=5 --id=1"
+    
+    device-adc-bbblue-left:
+        image: chalmersrevere/opendlv-device-adc-bbblue-armhf:v0.0.9
+        network_mode: "host"
+        privileged: true
+        volumes:
+          - /dev/mem:/dev/mem
+        command: "/usr/bin/opendlv-device-adc-bbblue --cid=111 --freq=5 --channel=2 --id=0"
+    
+    device-adc-bbblue-right:
+        image: chalmersrevere/opendlv-device-adc-bbblue-armhf:v0.0.9
+        network_mode: "host"
+        privileged: true
+        volumes:
+          - /dev/mem:/dev/mem
+        command: "/usr/bin/opendlv-device-adc-bbblue --cid=111 --freq=5 --channel=3 --id=1"
